@@ -7,6 +7,8 @@ object GlobalConst {
     val MAX_PLAYERS = 10
 
     val LOBBY_COUNTDOWN_SECONDS = 60
+    val INGAME_TOTAL_SECONDS = 60*240
+    val END_COUNTDOWN_SECONDS = 20
 
     val DATE_TEXT_FORMAT = "dd.MM.yyyy HH:mm"
 

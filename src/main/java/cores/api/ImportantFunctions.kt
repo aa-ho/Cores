@@ -20,4 +20,7 @@ object ImportantFunctions {
             it.level = level
         }
     }
+    fun playTimeReminderSoundToAll() {
+        playSoundForAll(Sound.ITEM_GOAT_HORN_SOUND_3)
+    }
 }

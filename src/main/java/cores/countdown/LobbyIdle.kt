@@ -25,7 +25,7 @@ class LobbyIdle : Countdown() {
     override fun start() {
         if (!isIdling) {
             isIdling = true
-            Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
                 if (PLAYERS.isNotEmpty()) {
                     if (PLAYERS.size < MIN_PLAYERS) {
                         waitingForXPlayers(MIN_PLAYERS - PLAYERS.size)
@@ -58,9 +58,9 @@ class LobbyIdle : Countdown() {
 
     override fun stop() {
         if (isIdling) {
+            Bukkit.getScheduler().cancelTask(taskID)
             isIdling = false
             GAME_STARTING = false
-
         }
     }
 }
