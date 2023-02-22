@@ -1,0 +1,6 @@
+name: Cores
+version: '${project.version}'
+main: cores.Main
+api-version: 1.19
+authors: [ Thefaces ]
+description: Core fake
