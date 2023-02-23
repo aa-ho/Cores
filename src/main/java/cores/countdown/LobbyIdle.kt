@@ -15,44 +15,26 @@ import cores.api.Messages.gameStartInXSecond
 import cores.api.Messages.gameStartInXSecondTitle
 import cores.api.Messages.gameStartTitle
 import cores.api.Messages.gameTitle
+import cores.api.Messages.sendConsole
 import cores.api.Messages.waitingForXPlayers
 import org.bukkit.Bukkit
 
 class LobbyIdle : Countdown() {
 
-    private var seconds = LOBBY_COUNTDOWN_SECONDS
+
 
     override fun start() {
+        sendConsole("Idle test")
         if (!isIdling) {
             isIdling = true
+            sendConsole("idlestartet")
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
                 if (PLAYERS.isNotEmpty()) {
                     if (PLAYERS.size < MIN_PLAYERS) {
                         waitingForXPlayers(MIN_PLAYERS - PLAYERS.size)
-                    } else {
-                        setLevelAll(seconds)
-                        when (seconds) {
-                            60, 30, 20, 10, 5, 4, 3, 2, 1 -> {
-                                playSoundForAll(LOBBY_COUNTDOWN_SOUND)
-                                sendTitleForAll(gameStartInXSecondTitle(seconds), 0, 20, 0)
-                                gameStartInXSecond(seconds)
-                            }
-                            8 -> {
-                                sendTitleForAll(gameTitle(), 15, 20, 15)
-                            }
-                            0 -> {
-                                playSoundForAll(GAME_START_SOUND)
-                                sendTitleForAll(gameStartTitle(), 0, 20, 0)
-                                stop()
-                            }
-                        }
-                        if (seconds < 3) {
-                            GAME_STARTING = true
-                        }
-                        seconds--
                     }
                 }
-            }, 0, 20)
+            }, 0, 600)
         }
     }
 
@@ -60,7 +42,7 @@ class LobbyIdle : Countdown() {
         if (isIdling) {
             Bukkit.getScheduler().cancelTask(taskID)
             isIdling = false
-            GAME_STARTING = false
+            plugin.gameStateManager.lobbyState.lobbyCountdown.start()
         }
     }
 }

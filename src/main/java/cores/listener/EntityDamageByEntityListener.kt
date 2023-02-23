@@ -1,25 +1,25 @@
 package cores.listener
 
-import cores.api.GlobalVars.CURRENT_GAME_STATE
+import cores.Main
 import cores.api.GlobalVars.PLAYERS
-import cores.gameStates.GameState
+import cores.gameStates.GameStates
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 
 class EntityDamageByEntityListener: Listener {
     fun entityDamageByEntity(e: EntityDamageByEntityEvent) {
-        when (CURRENT_GAME_STATE) {
-            GameState.LOBBY_STATE -> {
+        when (Main.plugin.gameStateManager.getCurrentGameState()) {
+            GameStates.LOBBY_STATE -> {
                 e.isCancelled = true
             }
-            GameState.INGAME_STATE -> {
+            GameStates.INGAME_STATE -> {
                 if (PLAYERS.contains(e.damager)) {
 
                 } else {
                     e.isCancelled = true
                 }
             }
-            GameState.END_STATE -> {
+            GameStates.END_STATE -> {
                 e.isCancelled = true
             }
         }

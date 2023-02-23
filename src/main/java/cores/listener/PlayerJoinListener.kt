@@ -1,10 +1,14 @@
 package cores.listener
 
-import cores.api.GlobalVars.CURRENT_GAME_STATE
+import cores.Main
+import cores.Main.Companion.plugin
+import cores.api.GlobalConst
+import cores.api.GlobalConst.MIN_PLAYERS
 import cores.api.GlobalVars.PLAYERS
+import cores.api.Messages
 import cores.api.Messages.playerJoinedGame
 import cores.api.Messages.playerRejoinedGame
-import cores.gameStates.GameState
+import cores.gameStates.GameStates
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -13,17 +17,23 @@ class PlayerJoinListener : Listener {
     @EventHandler
     fun join(e: PlayerJoinEvent) {
         e.joinMessage = null
-        when (CURRENT_GAME_STATE) {
-            GameState.LOBBY_STATE -> {
-                PLAYERS.add(e.player)
+        when (plugin.gameStateManager.getCurrentGameState()) {
+            GameStates.LOBBY_STATE -> {
+                PLAYERS[e.player] = true
                 playerJoinedGame(e.player.name)
+                if (PLAYERS.size < MIN_PLAYERS) {
+                    Messages.waitingForXPlayers(MIN_PLAYERS - PLAYERS.size)
+                } else {
+                    plugin.gameStateManager.lobbyState.lobbyIdle.stop()
+                }
             }
-            GameState.INGAME_STATE -> {
+            GameStates.INGAME_STATE -> {
                 if (PLAYERS.contains(e.player)) {
+                    PLAYERS[e.player] = true
                     playerRejoinedGame(e.player.name)
                 }
             }
-            GameState.END_STATE -> {
+            GameStates.END_STATE -> {
 
             }
         }

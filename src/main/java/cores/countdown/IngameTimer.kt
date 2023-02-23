@@ -8,7 +8,7 @@ import cores.api.Messages.gameEndsInXSeconds
 import cores.api.Messages.halftimeBroadcast
 import org.bukkit.Bukkit
 
-class IngameIdle : Countdown() {
+class IngameTimer : Countdown() {
 
     private var seconds = INGAME_TOTAL_SECONDS
 
@@ -16,7 +16,6 @@ class IngameIdle : Countdown() {
         if (!isIdling) {
             isIdling = true
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
-
                 when(seconds) {
                     INGAME_TOTAL_SECONDS/2 -> {
                         halftimeBroadcast()
