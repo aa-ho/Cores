@@ -15,7 +15,7 @@ import org.bukkit.Bukkit
 
 class LobbyCountdown: Countdown() {
 
-    private var seconds = LOBBY_COUNTDOWN_SECONDS
+    var seconds = LOBBY_COUNTDOWN_SECONDS
 
     override fun start() {
         if(!isIdling) {

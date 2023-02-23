@@ -15,8 +15,6 @@ object Messages {
     var CHAT_EXTENSION = " §8» §7"
     var PREFIX_CHAT = "$PREFIX_COLORED$CHAT_EXTENSION"
 
-    var PERMISSION_BYPASS = "cores.bypass"
-
     val GAME_IS_STARTING = "Das Spiel startet gerade."
     val GAME_IS_ENDING = "Das Spiel endet gerade."
     val JOIN_IS_DISABLED = "Das betreten des Spiels wurde deaktiviert."
@@ -106,5 +104,31 @@ object Messages {
     fun gameEndsInXSeconds(minutes: Int, plural: Boolean = true) {
         broadcastMessage("Das Spiel endet in §b${if (plural) minutes else "einer"} §7Sekunde${if (plural) "n" else ""}.")
     }
-
+    fun sendDoNotSpamCommand(p: Player) {
+        sendPlayer(p, "Bitte spamme nicht.")
+    }
+    fun sendMissingPermission(p: Player, permission: String) {
+        sendPlayer(p, permission)
+    }
+    fun sendPlayerOnlyLobbyStateStart(p: Player) {
+        sendPlayer(p, "Du kannst den Befehl nur in der Warte-Lobby ausführen.")
+    }
+    fun sendPlayerLobbyCountdownNotSkippable(p: Player) {
+        sendPlayer(p, "Du kannst den Countdown nicht mehr verkürzen.")
+    }
+    fun sendPlayerNoLobbyCountdownSkipBecauseNotEnoughPlayers(p: Player) {
+        sendPlayer(p, "Es sind §7§nnicht§n genügend Spieler in der Runde.")
+    }
+    fun sendAllLobbyCountdownSkipped(p: Player) {
+        Bukkit.getOnlinePlayers().forEach {
+            if(it.name == p.name) {
+                sendPlayer(it, "Du hast den Lobby-Countdown verkürzt.")
+            } else {
+                sendPlayer(it, "${p.name}§7 hat den Lobby-Countdown verkürzt.")
+            }
+        }
+    }
+    fun sendPLayerLobbySet(p: Player) {
+        sendPlayer(p, "Lobby Spawnpunkt gesetzt.")
+    }
 }

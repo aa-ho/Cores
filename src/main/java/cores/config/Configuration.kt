@@ -5,6 +5,7 @@ import cores.api.GlobalConst.DATE_TEXT_FORMAT
 import cores.api.GlobalConst.END_COUNTDOWN_SECONDS
 import cores.api.GlobalConst.INGAME_TOTAL_SECONDS
 import cores.api.GlobalConst.LOBBY_COUNTDOWN_SECONDS
+import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
 import cores.api.GlobalConst.MAX_PLAYERS
 import cores.api.GlobalConst.MIN_PLAYERS
 import cores.api.Messages.CHECK_CONFIG_FOR_CONTENT
@@ -37,6 +38,11 @@ class Configuration {
         INGAME_TOTAL_SECONDS = getter.getIngameTotalSeconds()
         END_COUNTDOWN_SECONDS = getter.getEndCountdownSeconds()
         DATE_TEXT_FORMAT = getter.getDateTextFormat()
+        try {
+            //LOBBY_SPAWN_LOCATION = getter.getLobbyLocation()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
         sendConsole(CONFIG_LOADED)
     }
 

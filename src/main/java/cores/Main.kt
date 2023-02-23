@@ -3,7 +3,9 @@ package cores
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
 import cores.api.GlobalConst.DATE_TEXT_FORMAT
+import cores.api.GlobalConst.START_COMMAND
 import cores.api.Messages.sendPluginDisEnabled
+import cores.commands.CoresCommand
 import cores.config.Configuration
 import cores.gameStates.GameStateManager
 import cores.gameStates.GameStates
@@ -30,6 +32,7 @@ class Main : JavaPlugin() {
         configuration.checkConfig()
         protocolManager = ProtocolLibrary.getProtocolManager()
         registerEvents()
+        getCommand(START_COMMAND)?.setExecutor(CoresCommand())
         gameStateManager.startGameState(GameStates.LOBBY_STATE)
         sendPluginDisEnabled(true, LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TEXT_FORMAT)))
     }

@@ -18,4 +18,6 @@ class ConfigGetter {
     fun getIngameTotalSeconds(): Int = plugin.config.getInt(CONFIG_INGAME_TOTAL_SECONDS)
     fun getEndCountdownSeconds(): Int = plugin.config.getInt(CONFIG_END_COUNTDOWN_SECONDS)
     fun getDateTextFormat(): String = plugin.config.getString(CONFIG_DATE_TEXT_FORMAT).toString()
+
+    //TODO lobby location and more...
 }
