@@ -3,6 +3,7 @@ package cores.listener
 import cores.Main
 import cores.Main.Companion.plugin
 import cores.api.GlobalConst
+import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
 import cores.api.GlobalConst.MIN_PLAYERS
 import cores.api.GlobalVars.PLAYERS
 import cores.api.Messages
@@ -19,6 +20,7 @@ class PlayerJoinListener : Listener {
         e.joinMessage = null
         when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
+                e.player.teleport(LOBBY_SPAWN_LOCATION)
                 PLAYERS[e.player] = true
                 playerJoinedGame(e.player.name)
                 if (PLAYERS.size < MIN_PLAYERS) {

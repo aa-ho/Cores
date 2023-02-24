@@ -1,5 +1,8 @@
 package cores.gameStates
 
+import cores.Main.Companion.plugin
+import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
+import cores.api.ImportantFunctions.teleportAll
 import cores.api.Messages
 import cores.countdown.EndStateCountdown
 import org.bukkit.Bukkit
@@ -11,6 +14,7 @@ class EndState: GameState() {
         Messages.sendStateToggled(GameStates.END_STATE, true)
         if(!isRunning) {
             isRunning = true
+            teleportAll(LOBBY_SPAWN_LOCATION)
             endStateCountdown.start()
         }
     }
@@ -23,5 +27,4 @@ class EndState: GameState() {
             endStateCountdown.stop()
         }
     }
-
 }

@@ -2,6 +2,8 @@ package cores
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
+import cores.api.Cores
+import cores.api.GlobalConst.CORES_COMMAND
 import cores.api.GlobalConst.DATE_TEXT_FORMAT
 import cores.api.GlobalConst.START_COMMAND
 import cores.api.Messages.sendPluginDisEnabled
@@ -20,21 +22,23 @@ import java.time.format.DateTimeFormatter
 class Main : JavaPlugin() {
     companion object {
         lateinit var plugin: Main
-        val configuration = Configuration()
+        lateinit var configuration: Configuration
         lateinit var protocolManager: ProtocolManager
     }
 
-    val configuration = Configuration()
     val gameStateManager = GameStateManager()
+    val cores = Cores()
 
     override fun onEnable() {
-        plugin = this
-        configuration.checkConfig()
-        protocolManager = ProtocolLibrary.getProtocolManager()
-        registerEvents()
-        getCommand(START_COMMAND)?.setExecutor(CoresCommand())
-        gameStateManager.startGameState(GameStates.LOBBY_STATE)
         sendPluginDisEnabled(true, LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TEXT_FORMAT)))
+        plugin = this
+        protocolManager = ProtocolLibrary.getProtocolManager()
+        configuration = Configuration()
+        configuration.checkConfig()
+        registerEvents()
+        getCommand(CORES_COMMAND)?.setExecutor(CoresCommand())
+        gameStateManager.startGameState(GameStates.LOBBY_STATE)
+        cores.addAllCores()
     }
 
     override fun onDisable() {

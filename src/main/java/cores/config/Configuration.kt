@@ -8,13 +8,22 @@ import cores.api.GlobalConst.LOBBY_COUNTDOWN_SECONDS
 import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
 import cores.api.GlobalConst.MAX_PLAYERS
 import cores.api.GlobalConst.MIN_PLAYERS
+import cores.api.GlobalConst.RED_CORE_FRONT
+import cores.api.GlobalConst.TEAM_SPAWN_BLUE_LOCATION
+import cores.api.GlobalConst.TEAM_SPAWN_RED_LOCATION
 import cores.api.Messages.CHECK_CONFIG_FOR_CONTENT
 import cores.api.Messages.CONFIG_LOADED
 import cores.api.Messages.NEW_CONFIG_CREATED
 import cores.api.Messages.NO_CONFIG_FOUND_GENERATING_CONFIG
 import cores.api.Messages.sendConsole
+import cores.api.Teams
 import cores.config.Paths.CONFIG_DATE_TEXT_FORMAT
 import cores.config.Paths.CONFIG_PREFIX
+import cores.config.Paths.GAME_CONFIG
+import cores.config.Paths.GAME_CONFIG_YML
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.configuration.file.YamlConfiguration
+import java.io.File
 import java.io.IOException
 
 class Configuration {
@@ -31,6 +40,19 @@ class Configuration {
         }
     }
 
+    private val gameFile = File(GAME_CONFIG, GAME_CONFIG_YML)
+    val gameConfigYml: FileConfiguration = YamlConfiguration.loadConfiguration(gameFile)
+
+    fun saveGameConfig(path: String, value: Any?) {
+        gameConfigYml.set(path, value)
+        try {
+            gameConfigYml.save(gameFile)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+
     private fun loadConfig() {
         MIN_PLAYERS = getter.getMinPlayers()
         MAX_PLAYERS = getter.getMaxPlayers()
@@ -39,7 +61,17 @@ class Configuration {
         END_COUNTDOWN_SECONDS = getter.getEndCountdownSeconds()
         DATE_TEXT_FORMAT = getter.getDateTextFormat()
         try {
-            //LOBBY_SPAWN_LOCATION = getter.getLobbyLocation()
+            if(getter.getLobbyLocation() != null) {
+                LOBBY_SPAWN_LOCATION = getter.getLobbyLocation()!!
+
+            }
+            if(getter.getTeamSpawn(Teams.RED) != null) {
+                TEAM_SPAWN_RED_LOCATION = getter.getTeamSpawn(Teams.RED)!!
+
+            }
+            if(getter.getTeamSpawn(Teams.BLUE) != null) {
+                TEAM_SPAWN_RED_LOCATION = getter.getTeamSpawn(Teams.BLUE)!!
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }

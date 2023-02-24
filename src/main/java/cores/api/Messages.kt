@@ -1,12 +1,24 @@
 package cores.api
 
 import cores.Main.Companion.plugin
+import cores.api.GlobalConst.BEACON_BACK
+import cores.api.GlobalConst.BEACON_FRONT
+import cores.api.GlobalConst.BEACON_LEFT
+import cores.api.GlobalConst.BEACON_RIGHT
+import cores.api.GlobalConst.BLUE_COMMAND
+import cores.api.GlobalConst.CORES_COMMAND
+import cores.api.GlobalConst.HELP_COMMAND
 import cores.api.GlobalConst.INGAME_TOTAL_SECONDS
 import cores.api.GlobalConst.MAX_PLAYERS
+import cores.api.GlobalConst.RED_COMMAND
+import cores.api.GlobalConst.SET_BEACON_COMMAND
+import cores.api.GlobalConst.SET_COMMAND
+import cores.api.GlobalConst.SET_TEAM_SPAWN
 import cores.api.GlobalVars.PLAYERS
 import cores.gameStates.GameStates
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.scoreboard.Team
 
 object Messages {
     var PREFIX = "Cores"
@@ -14,6 +26,9 @@ object Messages {
     var PREFIX_COLORED = "$PREFIX_COLOR$PREFIX"
     var CHAT_EXTENSION = " §8» §7"
     var PREFIX_CHAT = "$PREFIX_COLORED$CHAT_EXTENSION"
+
+    var RED_COLORED = "§cRot"
+    var BLUE_COLORED = "§9Blau"
 
     val GAME_IS_STARTING = "Das Spiel startet gerade."
     val GAME_IS_ENDING = "Das Spiel endet gerade."
@@ -28,6 +43,12 @@ object Messages {
         "§eDie $CONFIG_COLORED§e ist leer oder existiert §e§nnicht§e. Config wird generiert..."
     val NEW_CONFIG_CREATED = "§e Neue $CONFIG_COLORED§e erstellt."
     val CONFIG_LOADED = "$CONFIG_COLORED§e geladen. §a✓"
+
+    val COMMAND_HELPER_START = "Bitte nutze: §b§n/$CORES_COMMAND "
+
+    private fun sendPlayerCommandHelper(p: Player, commands: String) {
+        sendPlayer(p, "$COMMAND_HELPER_START$commands§7.")
+    }
 
     fun sendConsole(message: String, prefix: Boolean = true) {
         Bukkit.getConsoleSender().sendMessage("${if (prefix) PREFIX_CHAT else ""}$message")
@@ -117,7 +138,7 @@ object Messages {
         sendPlayer(p, "Du kannst den Countdown nicht mehr verkürzen.")
     }
     fun sendPlayerNoLobbyCountdownSkipBecauseNotEnoughPlayers(p: Player) {
-        sendPlayer(p, "Es sind §7§nnicht§n genügend Spieler in der Runde.")
+        sendPlayer(p, "Es sind §7§nnicht§7 genügend Spieler in der Runde.")
     }
     fun sendAllLobbyCountdownSkipped(p: Player) {
         Bukkit.getOnlinePlayers().forEach {
@@ -130,5 +151,20 @@ object Messages {
     }
     fun sendPLayerLobbySet(p: Player) {
         sendPlayer(p, "Lobby Spawnpunkt gesetzt.")
+    }
+    fun sendPlayerTeamSpawnSet(p: Player, team: Teams) {
+        sendPlayer(p, "Spawnpunkt für Team §${if(team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 gesetzt.")
+    }
+    fun sendPlayerCoreLocSet(p: Player, team: Teams, beacon: Beacons) {
+        sendPlayer(p, "${if(team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 §b$beacon §7gesetzt.")
+    }
+    fun sendPlayerTeamSpawnSetHelp(p: Player) {
+        sendPlayerCommandHelper(p, "$SET_COMMAND $SET_TEAM_SPAWN $RED_COMMAND/$BLUE_COMMAND")
+    }
+    fun sendPlayerSetCoreLocHelp(p: Player) {
+        sendPlayerCommandHelper(p, "$SET_COMMAND $SET_BEACON_COMMAND $RED_COMMAND/$BLUE_COMMAND $BEACON_FRONT/$BEACON_BACK/$BEACON_LEFT/$BEACON_RIGHT")
+    }
+    fun sendPlayerCoresCommand(p: Player) {
+        sendPlayerCommandHelper(p, HELP_COMMAND)
     }
 }

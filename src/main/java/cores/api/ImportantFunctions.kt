@@ -1,6 +1,7 @@
 package cores.api
 
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Sound
 
 object ImportantFunctions {
@@ -22,5 +23,10 @@ object ImportantFunctions {
     }
     fun playTimeReminderSoundToAll() {
         playSoundForAll(Sound.ITEM_GOAT_HORN_SOUND_3)
+    }
+    fun teleportAll(loc: Location) {
+        Bukkit.getOnlinePlayers().forEach {
+            it.teleport(loc)
+        }
     }
 }

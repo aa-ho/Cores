@@ -9,6 +9,7 @@ import cores.api.GlobalVars
 import cores.api.GlobalVars.GAME_STARTING
 import cores.api.ImportantFunctions
 import cores.api.Messages
+import cores.api.Messages.gameStartInXSecond
 import cores.api.Messages.sendConsole
 import cores.gameStates.GameStates
 import org.bukkit.Bukkit
@@ -26,6 +27,7 @@ class LobbyCountdown: Countdown() {
                     60, 30, 20, 10 -> {
                         ImportantFunctions.playSoundForAll(LOBBY_COUNTDOWN_SOUND)
                         ImportantFunctions.sendTitleForAll(Messages.gameStartInXSecondTitle(seconds), 0, 20, 0)
+                        gameStartInXSecond(seconds)
                     }
                     8 -> {
                         ImportantFunctions.sendTitleForAll(Messages.gameTitle(), 15, 20, 15)

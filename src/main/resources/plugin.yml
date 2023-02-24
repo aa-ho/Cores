@@ -4,3 +4,6 @@ main: cores.Main
 api-version: 1.19
 authors: [ Thefaces ]
 description: Core fake
+commands:
+  cores:
+    description: TimeLineWar 6 Info Command

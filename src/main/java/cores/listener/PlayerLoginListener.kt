@@ -2,6 +2,7 @@ package cores.listener
 
 import cores.Main
 import cores.api.GlobalConst.MAX_PLAYERS
+import cores.api.GlobalConst.PERMISSION_BYPASS
 import cores.api.GlobalVars.ALLOW_JOIN
 import cores.api.GlobalVars.GAME_STARTING
 import cores.api.GlobalVars.PLAYERS
@@ -11,7 +12,6 @@ import cores.api.Messages.GAME_IS_ENDING
 import cores.api.Messages.GAME_IS_STARTING
 import cores.api.Messages.JOIN_IS_DISABLED
 import cores.api.Messages.KICK_FROM_VIP
-import cores.api.Messages.PERMISSION_BYPASS
 import cores.gameStates.GameStates
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
