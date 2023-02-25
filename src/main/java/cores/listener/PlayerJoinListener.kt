@@ -10,6 +10,7 @@ import cores.api.ImportantFunctions.setLobbyInventoryAndPrivileges
 import cores.api.Messages
 import cores.api.Messages.playerJoinedGame
 import cores.api.Messages.playerRejoinedGame
+import cores.api.Scoreboard
 import cores.gameStates.GameStates
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
@@ -20,6 +21,7 @@ class PlayerJoinListener : Listener {
     @EventHandler
     fun join(e: PlayerJoinEvent) {
         e.joinMessage = null
+        Scoreboard().createScoreboard()
         when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
                 e.player.teleport(LOBBY_SPAWN_LOCATION)
@@ -40,11 +42,11 @@ class PlayerJoinListener : Listener {
                 if (PLAYERS.contains(e.player)) {
                     PLAYERS[e.player] = true
                     playerRejoinedGame(e.player.name)
+                } else {
+                    e.player.gameMode = GameMode.ADVENTURE
                 }
             }
-            GameStates.END_STATE -> {
-
-            }
+            GameStates.END_STATE -> {}
         }
     }
 }
