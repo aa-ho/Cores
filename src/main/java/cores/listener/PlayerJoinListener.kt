@@ -1,10 +1,10 @@
 package cores.listener
 
-import cores.Main.Companion.plugin
+import cores.Main.Companion.gameStateManager
+import cores.Main.Companion.teamHelper
 import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
 import cores.api.GlobalConst.MIN_PLAYERS
 import cores.api.GlobalVars.PLAYERS
-import cores.api.ImportantFunctions
 import cores.api.ImportantFunctions.enchantStartItem
 import cores.api.ImportantFunctions.setLobbyInventoryAndPrivileges
 import cores.api.Messages
@@ -22,10 +22,11 @@ class PlayerJoinListener : Listener {
     fun join(e: PlayerJoinEvent) {
         e.joinMessage = null
         Scoreboard().createScoreboard()
-        when (plugin.gameStateManager.getCurrentGameState()) {
+        when (gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
                 e.player.teleport(LOBBY_SPAWN_LOCATION)
                 setLobbyInventoryAndPrivileges(e.player)
+                teamHelper.reopenTeamInventoryAll()
                 e.player.gameMode = GameMode.ADVENTURE
                 e.player.inventory.heldItemSlot = 0
                 e.player.level = 0
@@ -35,7 +36,7 @@ class PlayerJoinListener : Listener {
                     Messages.waitingForXPlayers(MIN_PLAYERS - PLAYERS.size)
                 } else {
                     enchantStartItem()
-                    plugin.gameStateManager.lobbyState.lobbyIdle.stop()
+                    gameStateManager.lobbyState.lobbyIdle.stop()
                 }
             }
             GameStates.INGAME_STATE -> {

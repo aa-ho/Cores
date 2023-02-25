@@ -1,6 +1,7 @@
 package cores.listener
 
-import cores.Main
+import cores.Main.Companion.gameStateManager
+import cores.Main.Companion.plugin
 import cores.api.GlobalConst.MAX_PLAYERS
 import cores.api.GlobalConst.PERMISSION_BYPASS
 import cores.api.GlobalVars.ALLOW_JOIN
@@ -21,7 +22,7 @@ class PlayerLoginListener : Listener {
     @EventHandler
     fun connect(e: PlayerLoginEvent) {
         if (ALLOW_JOIN) {
-            when (Main.plugin.gameStateManager.getCurrentGameState()) {
+            when (gameStateManager.getCurrentGameState()) {
                 GameStates.LOBBY_STATE -> {
                     if (GAME_STARTING) {
                         e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_IS_STARTING)

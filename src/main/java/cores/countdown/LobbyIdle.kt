@@ -1,5 +1,6 @@
 package cores.countdown
 
+import cores.Main.Companion.gameStateManager
 import cores.Main.Companion.plugin
 import cores.api.GlobalConst.GAME_START_SOUND
 import cores.api.GlobalVars.PLAYERS
@@ -24,10 +25,8 @@ class LobbyIdle : Countdown() {
 
 
     override fun start() {
-        sendConsole("Idle test")
         if (!isIdling) {
             isIdling = true
-            sendConsole("idlestartet")
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
                 if (PLAYERS.isNotEmpty()) {
                     if (PLAYERS.size < MIN_PLAYERS) {
@@ -42,7 +41,7 @@ class LobbyIdle : Countdown() {
         if (isIdling) {
             Bukkit.getScheduler().cancelTask(taskID)
             isIdling = false
-            plugin.gameStateManager.lobbyState.lobbyCountdown.start()
+            gameStateManager.lobbyState.lobbyCountdown.start()
         }
     }
 }

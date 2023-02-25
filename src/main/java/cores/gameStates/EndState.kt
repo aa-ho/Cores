@@ -1,7 +1,9 @@
 package cores.gameStates
 
 import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
+import cores.api.ImportantFunctions
 import cores.api.ImportantFunctions.clearAll
+import cores.api.ImportantFunctions.closeAllInventories
 import cores.api.ImportantFunctions.setGameModeAll
 import cores.api.ImportantFunctions.teleportAll
 import cores.api.Messages
@@ -17,6 +19,7 @@ class EndState: GameState() {
         if(!isRunning) {
             isRunning = true
             clearAll()
+            closeAllInventories()
             setGameModeAll(GameMode.ADVENTURE)
             teleportAll(LOBBY_SPAWN_LOCATION)
             endStateCountdown.start()

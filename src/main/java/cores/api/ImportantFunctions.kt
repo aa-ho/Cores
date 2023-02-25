@@ -1,12 +1,20 @@
 package cores.api
 
-import cores.Main.Companion.plugin
+import cores.Main.Companion.gameStateManager
 import cores.api.GlobalConst.LEAVE_GAME_ITEM
 import cores.api.GlobalConst.PERMISSION_BYPASS
 import cores.api.GlobalConst.STAR_GAME_ITEM
+import cores.api.GlobalConst.TEAM_SELECTOR_ITEM
+import cores.api.GlobalConst.arrowItems
+import cores.api.GlobalConst.bowItem
+import cores.api.GlobalConst.goldenAppleItem
+import cores.api.GlobalConst.iron_axe
+import cores.api.GlobalConst.iron_pickage
+import cores.api.GlobalConst.swordItem
+import cores.api.GlobalConst.woodItems
+import cores.api.GlobalVars.PLAYERS
 import cores.api.Messages.KICK_LEAVE_ITEM
 import cores.gameStates.GameStates
-import fr.skytasul.guardianbeam.Laser
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -56,6 +64,7 @@ object ImportantFunctions {
 
     fun setLobbyInventoryAndPrivileges(p: Player) {
         p.inventory.setItem(8, LEAVE_GAME_ITEM)
+        p.inventory.setItem(4, TEAM_SELECTOR_ITEM)
         if (p.hasPermission(PERMISSION_BYPASS)) {
             p.inventory.setItem(0, STAR_GAME_ITEM)
             //val laser = Laser.GuardianLaser(GlobalConst.LOBBY_SPAWN_LOCATION, GlobalConst.LOBBY_SPAWN_LOCATION, 5, 10)
@@ -76,13 +85,13 @@ object ImportantFunctions {
     }
 
     fun skipCountdown(p: Player) {
-        if (plugin.gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) {
-            if (plugin.gameStateManager.lobbyState.lobbyCountdown.isIdling && plugin.gameStateManager.lobbyState.lobbyCountdown.seconds <= GlobalConst.LOBBY_COUNTDOWN_SKIP_SECONDS) {
+        if (gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) {
+            if (gameStateManager.lobbyState.lobbyCountdown.isIdling && gameStateManager.lobbyState.lobbyCountdown.seconds <= GlobalConst.LOBBY_COUNTDOWN_SKIP_SECONDS) {
                 Messages.sendPlayerLobbyCountdownNotSkippable(p)
-            } else if (GlobalVars.PLAYERS.size < GlobalConst.MIN_PLAYERS) {
+            } else if (PLAYERS.size < GlobalConst.MIN_PLAYERS) {
                 Messages.sendPlayerNoLobbyCountdownSkipBecauseNotEnoughPlayers(p)
             } else {
-                plugin.gameStateManager.lobbyState.lobbyCountdown.seconds =
+                gameStateManager.lobbyState.lobbyCountdown.seconds =
                     GlobalConst.LOBBY_COUNTDOWN_SKIP_SECONDS
                 Messages.sendAllLobbyCountdownSkipped(p)
                 p.playSound(p.location, Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F)
@@ -102,6 +111,18 @@ object ImportantFunctions {
             it.gameMode = gameMode
         }
     }
+    fun setIngamePlayerItems(p: Player) {
+        p.inventory.setItem(0, swordItem)
+        p.inventory.setItem(1, bowItem)
+        p.inventory.setItem(2, goldenAppleItem)
+        p.inventory.setItem(3, iron_pickage)
+        p.inventory.setItem(4, iron_axe)
+        p.inventory.setItem(5, woodItems)
+        p.inventory.setItem(8, arrowItems)
+    }
+    fun setSpectatorPlayerItems(p: Player) {
+
+    }
 /*    fun createSmokeCircle(player: Player) {
         val particle = Particle.SMOKE_NORMAL
         val startY = player.location.y - 1.0
@@ -118,4 +139,17 @@ object ImportantFunctions {
             TimeUnit.MILLISECONDS.sleep(100)
         }
     }*/
+    fun closeAllInventories() {
+        Bukkit.getOnlinePlayers().forEach {
+            it.openInventory.close()
+        }
+    }
+    fun setIngameItemsAll() {
+        PLAYERS.forEach {
+            setIngamePlayerItems(it.key)
+        }
+    }
+    fun sendPlayerFailedSound(p: Player) {
+        p.playSound(p.location, Sound.BLOCK_ANVIL_LAND, 1.0F, 1.0F)
+    }
 }

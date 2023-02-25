@@ -1,6 +1,6 @@
 package cores.listener
 
-import cores.Main.Companion.plugin
+import cores.Main.Companion.gameStateManager
 import cores.api.GlobalVars.PLAYERS
 import cores.gameStates.GameStates
 import org.bukkit.Material
@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent
 class BlockBreakListener: Listener {
     @EventHandler
     fun blockBreak(e: BlockBreakEvent) {
-        when(plugin.gameStateManager.getCurrentGameState()) {
+        when(gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
                 e.isCancelled = true
             }

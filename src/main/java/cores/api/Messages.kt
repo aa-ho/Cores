@@ -1,6 +1,7 @@
 package cores.api
 
-import cores.Main.Companion.plugin
+import cores.Main.Companion.gameStateManager
+import cores.Main.Companion.teamHelper
 import cores.api.GlobalConst.BEACON_BACK
 import cores.api.GlobalConst.BEACON_FRONT
 import cores.api.GlobalConst.BEACON_LEFT
@@ -18,7 +19,6 @@ import cores.api.GlobalVars.PLAYERS
 import cores.gameStates.GameStates
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.scoreboard.Team
 
 object Messages {
     var PREFIX = "Cores"
@@ -45,7 +45,13 @@ object Messages {
     val NEW_CONFIG_CREATED = "§e Neue $CONFIG_COLORED§e erstellt."
     val CONFIG_LOADED = "$CONFIG_COLORED§e geladen. §a✓"
 
-    val COMMAND_HELPER_START = "Bitte nutze: §b§n/$CORES_COMMAND "
+    private val COMMAND_HELPER_START = "Bitte nutze: §b§n/$CORES_COMMAND "
+
+    fun teamSelectItems(teams: Teams): String {
+        return if(teams == Teams.RED) "§b${teamHelper.teamSize(Teams.RED)}§7/§3${MAX_PLAYERS/2}"
+         else "§b${teamHelper.teamSize(Teams.BLUE)}§7/§3${MAX_PLAYERS/2}"
+
+    }
 
     private fun sendPlayerCommandHelper(p: Player, commands: String) {
         sendPlayer(p, "$COMMAND_HELPER_START$commands§7.")
@@ -108,8 +114,8 @@ object Messages {
     fun playerLeftGame(name: String) {
         broadcastMessage(
             "§c$name§7 hat das Spiel verlassen ${
-                if (plugin.gameStateManager.getCurrentGameState() == GameStates.END_STATE) ""
-                else if (plugin.gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) "(§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7)"
+                if (gameStateManager.getCurrentGameState() == GameStates.END_STATE) ""
+                else if (gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) "(§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7)"
                 else "(rejoin)"
             }."
         )
@@ -167,5 +173,11 @@ object Messages {
     }
     fun sendPlayerCoresCommand(p: Player) {
         sendPlayerCommandHelper(p, HELP_COMMAND)
+    }
+    fun sendPlayerTeamFull(p: Player, teams: Teams) {
+        sendPlayer(p, "Team ${if(teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 ist voll.")
+    }
+    fun sendPlayerJoinedTeam(p: Player, teams: Teams) {
+        sendPlayer(p, "Du bist Team ${if(teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 beigetreten.")
     }
 }
