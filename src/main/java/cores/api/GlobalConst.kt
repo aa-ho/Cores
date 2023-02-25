@@ -1,8 +1,12 @@
 package cores.api
 
+import fr.skytasul.guardianbeam.Laser.GuardianLaser
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.block.Beacon
+import org.bukkit.entity.Player
 
 object GlobalConst {
     var MIN_PLAYERS = 2
@@ -27,11 +31,13 @@ object GlobalConst {
     var BLUE_CORE_LEFT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
     var BLUE_CORE_RIGHT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
 
-
-
-
     val LOBBY_COUNTDOWN_SOUND = Sound.BLOCK_NOTE_BLOCK_BANJO
     val GAME_START_SOUND = Sound.ITEM_GOAT_HORN_SOUND_3
+    val START_GAME_ITEM_TITLE = "§5Countdown verkürzen"
+    val STAR_GAME_ITEM = ItemBuilder(Material.FEATHER).setDisplayName(START_GAME_ITEM_TITLE).build()
+
+    val LEAVE_GAME_ITEM_TITLE = "§cSpiel verlassen"
+    val LEAVE_GAME_ITEM = ItemBuilder(Material.STRUCTURE_VOID).setDisplayName(LEAVE_GAME_ITEM_TITLE).build()
 
     var PERMISSION_BYPASS = "cores.bypass"
     val CORES_COMMAND = "cores"

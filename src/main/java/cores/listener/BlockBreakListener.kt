@@ -18,7 +18,7 @@ class BlockBreakListener: Listener {
             GameStates.INGAME_STATE -> {
                 if(PLAYERS.contains(e.player)) {
                     if(e.block.type == Material.BEACON) {
-                        //TODO CHECK WHICH BEACON
+
                     } else return
                 } else {
                     e.isCancelled = true

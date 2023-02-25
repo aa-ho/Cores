@@ -36,6 +36,7 @@ object Messages {
     val GAME_FULL_ONLY_VIP = "Du musst VIP sein, um einer vollen Runde beizutreten."
     val GAME_FULL = "Das Spiel ist voll."
     val KICK_FROM_VIP = "Ein VIP hat die volle Runde betreten."
+    val KICK_LEAVE_ITEM = "Du hast das Spiel verlassen."
 
     val CONFIG_COLORED = "§bConfig"
     val CHECK_CONFIG_FOR_CONTENT = "§eDie $CONFIG_COLORED§e wird auf Inhalte geprüft..."
@@ -145,7 +146,7 @@ object Messages {
             if(it.name == p.name) {
                 sendPlayer(it, "Du hast den Lobby-Countdown verkürzt.")
             } else {
-                sendPlayer(it, "${p.name}§7 hat den Lobby-Countdown verkürzt.")
+                sendPlayer(it, "§a${p.name}§7 hat den Lobby-Countdown verkürzt.")
             }
         }
     }

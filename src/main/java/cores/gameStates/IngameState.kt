@@ -4,6 +4,7 @@ import cores.Main
 import cores.Main.Companion.plugin
 import cores.api.GlobalVars.TEAM_BLUE
 import cores.api.GlobalVars.TEAM_RED
+import cores.api.ImportantFunctions.clearAll
 import cores.api.Messages
 import cores.countdown.IngameTimer
 import org.bukkit.Bukkit
@@ -16,6 +17,7 @@ class IngameState: GameState() {
         Messages.sendStateToggled(GameStates.INGAME_STATE, true)
         if(!isRunning) {
             isRunning = true
+            clearAll()
             ingameTimer.start()
         }
     }

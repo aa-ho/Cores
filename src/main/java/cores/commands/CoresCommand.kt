@@ -18,6 +18,7 @@ import cores.api.GlobalConst.BLUE_COMMAND
 import cores.api.GlobalConst.RED_COMMAND
 import cores.api.GlobalConst.SET_BEACON_COMMAND
 import cores.api.GlobalVars.PLAYERS
+import cores.api.ImportantFunctions.skipCountdown
 import cores.api.Messages.sendAllLobbyCountdownSkipped
 import cores.api.Messages.sendDoNotSpamCommand
 import cores.api.Messages.sendMissingPermission
@@ -67,20 +68,7 @@ class CoresCommand : CommandExecutor {
                             1 -> {
                                 when (args[0]) {
                                     START_COMMAND -> {
-                                        if (plugin.gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) {
-                                            if (plugin.gameStateManager.lobbyState.lobbyCountdown.isIdling && plugin.gameStateManager.lobbyState.lobbyCountdown.seconds <= LOBBY_COUNTDOWN_SKIP_SECONDS) {
-                                                sendPlayerLobbyCountdownNotSkippable(p)
-                                            } else if (PLAYERS.size < MIN_PLAYERS) {
-                                                sendPlayerNoLobbyCountdownSkipBecauseNotEnoughPlayers(p)
-                                            } else {
-                                                plugin.gameStateManager.lobbyState.lobbyCountdown.seconds =
-                                                    LOBBY_COUNTDOWN_SKIP_SECONDS
-                                                sendAllLobbyCountdownSkipped(p)
-                                            }
-                                        } else {
-                                            sendPlayerOnlyLobbyStateStart(p)
-                                        }
-
+                                        skipCountdown(p)
                                     }
                                 }
                             }

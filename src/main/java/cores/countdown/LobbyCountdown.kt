@@ -8,6 +8,9 @@ import cores.api.GlobalConst.LOBBY_COUNTDOWN_SOUND
 import cores.api.GlobalVars
 import cores.api.GlobalVars.GAME_STARTING
 import cores.api.ImportantFunctions
+import cores.api.ImportantFunctions.disEnchantStartItem
+import cores.api.ImportantFunctions.enchantStartItem
+import cores.api.ImportantFunctions.setLevelAll
 import cores.api.Messages
 import cores.api.Messages.gameStartInXSecond
 import cores.api.Messages.sendConsole
@@ -21,8 +24,9 @@ class LobbyCountdown: Countdown() {
     override fun start() {
         if(!isIdling) {
             isIdling = true
+
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
-                ImportantFunctions.setLevelAll(seconds)
+                setLevelAll(seconds)
                 when (seconds) {
                     60, 30, 20, 10 -> {
                         ImportantFunctions.playSoundForAll(LOBBY_COUNTDOWN_SOUND)
@@ -44,6 +48,9 @@ class LobbyCountdown: Countdown() {
                         plugin.gameStateManager.setGameState(GameStates.INGAME_STATE)
                     }
                 }
+                if(seconds == 10) {
+                    disEnchantStartItem()
+                }
                 if (seconds < 3) {
                     GAME_STARTING = true
                 }
@@ -58,6 +65,9 @@ class LobbyCountdown: Countdown() {
             Bukkit.getScheduler().cancelTask(taskID)
             isIdling = false
             GAME_STARTING = false
+            seconds = LOBBY_COUNTDOWN_SECONDS
+            disEnchantStartItem()
+            setLevelAll(0)
         }
     }
 }

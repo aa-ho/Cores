@@ -20,34 +20,32 @@ import org.bukkit.event.player.PlayerLoginEvent
 class PlayerLoginListener : Listener {
     @EventHandler
     fun connect(e: PlayerLoginEvent) {
-        if(ALLOW_JOIN) {
-            if (GAME_STARTING) {
-                e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_IS_STARTING)
-            } else {
-                when(Main.plugin.gameStateManager.getCurrentGameState()) {
-                    GameStates.LOBBY_STATE -> {
-                        if (PLAYERS.size == MAX_PLAYERS) {
-                            if (e.player.hasPermission(PERMISSION_BYPASS)) {
-                                PLAYERS.forEach {
-                                    if (!it.key.hasPermission(PERMISSION_BYPASS)) {
-                                        e.disallow(PlayerLoginEvent.Result.KICK_FULL, KICK_FROM_VIP)
-                                        return
-                                    }
+        if (ALLOW_JOIN) {
+            when (Main.plugin.gameStateManager.getCurrentGameState()) {
+                GameStates.LOBBY_STATE -> {
+                    if (GAME_STARTING) {
+                        e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_IS_STARTING)
+                    } else if (PLAYERS.size == MAX_PLAYERS) {
+                        if (e.player.hasPermission(PERMISSION_BYPASS)) {
+                            PLAYERS.forEach {
+                                if (!it.key.hasPermission(PERMISSION_BYPASS)) {
+                                    e.disallow(PlayerLoginEvent.Result.KICK_FULL, KICK_FROM_VIP)
+                                    return
                                 }
-                                e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_FULL)
-                            } else {
-                                e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_FULL_ONLY_VIP)
                             }
+                            e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_FULL)
                         } else {
-                            //TODO ???
+                            e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_FULL_ONLY_VIP)
                         }
+                    } else {
+                        //TODO ???
                     }
-                    GameStates.INGAME_STATE -> {
+                }
+                GameStates.INGAME_STATE -> {
 
-                    }
-                    GameStates.END_STATE -> {
-                        e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_IS_ENDING)
-                    }
+                }
+                GameStates.END_STATE -> {
+                    e.disallow(PlayerLoginEvent.Result.KICK_FULL, GAME_IS_ENDING)
                 }
             }
         } else {
