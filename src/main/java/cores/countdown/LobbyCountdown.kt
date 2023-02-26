@@ -1,6 +1,5 @@
 package cores.countdown
 
-import cores.Main.Companion.gameStateManager
 import cores.Main.Companion.plugin
 import cores.api.GlobalConst.GAME_START_SOUND
 import cores.api.GlobalConst.LOBBY_COUNTDOWN_SECONDS
@@ -9,7 +8,9 @@ import cores.api.GlobalVars.GAME_STARTING
 import cores.api.ImportantFunctions
 import cores.api.ImportantFunctions.disEnchantStartItem
 import cores.api.ImportantFunctions.setLevelAll
+import cores.api.ImportantFunctions.updateScoreboardAll
 import cores.api.Messages
+import cores.api.Messages.LETS_GO
 import cores.api.Messages.gameStartInXSecond
 import cores.api.Messages.sendConsole
 import cores.gameStates.GameStates
@@ -23,6 +24,7 @@ class LobbyCountdown: Countdown() {
 
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
                 setLevelAll(seconds)
+                updateScoreboardAll()
                 when (seconds) {
                     60, 30, 20, 10 -> {
                         ImportantFunctions.playSoundForAll(LOBBY_COUNTDOWN_SOUND)
@@ -39,9 +41,9 @@ class LobbyCountdown: Countdown() {
                     }
                     0 -> {
                         ImportantFunctions.playSoundForAll(GAME_START_SOUND)
-                        ImportantFunctions.sendTitleForAll(Messages.gameStartTitle(), 0, 20, 0)
+                        ImportantFunctions.sendTitleForAll(LETS_GO, 0, 20, 0)
                         stop()
-                        gameStateManager.setGameState(GameStates.INGAME_STATE)
+                        plugin.gameStateManager.setGameState(GameStates.INGAME_STATE)
                     }
                 }
                 if(seconds == 10) {

@@ -1,16 +1,17 @@
 package cores.listener
 
-import cores.Main.Companion.gameStateManager
-import cores.Main.Companion.teamHelper
+
+import cores.Main.Companion.plugin
 import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
 import cores.api.GlobalConst.MIN_PLAYERS
 import cores.api.GlobalVars.PLAYERS
 import cores.api.ImportantFunctions.enchantStartItem
+import cores.api.ImportantFunctions.setAllPlayerTeamActionBar
 import cores.api.ImportantFunctions.setLobbyInventoryAndPrivileges
+import cores.api.ImportantFunctions.updateScoreboardAll
 import cores.api.Messages
-import cores.api.Messages.playerJoinedGame
+import cores.api.Messages.sendPlayerJoinedGame
 import cores.api.Messages.playerRejoinedGame
-import cores.api.Scoreboard
 import cores.gameStates.GameStates
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
@@ -21,22 +22,23 @@ class PlayerJoinListener : Listener {
     @EventHandler
     fun join(e: PlayerJoinEvent) {
         e.joinMessage = null
-        Scoreboard().createScoreboard()
-        when (gameStateManager.getCurrentGameState()) {
+        when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
+                PLAYERS[e.player] = true
                 e.player.teleport(LOBBY_SPAWN_LOCATION)
+                e.player.inventory.clear()
                 setLobbyInventoryAndPrivileges(e.player)
-                teamHelper.reopenTeamInventoryAll()
+                plugin.teamHelper.reopenTeamInventoryAll()
+                updateScoreboardAll()
                 e.player.gameMode = GameMode.ADVENTURE
                 e.player.inventory.heldItemSlot = 0
                 e.player.level = 0
-                PLAYERS[e.player] = true
-                playerJoinedGame(e.player.name)
+                sendPlayerJoinedGame(e.player.name)
                 if (PLAYERS.size < MIN_PLAYERS) {
                     Messages.waitingForXPlayers(MIN_PLAYERS - PLAYERS.size)
                 } else {
                     enchantStartItem()
-                    gameStateManager.lobbyState.lobbyIdle.stop()
+                    plugin.gameStateManager.lobbyState.lobbyIdle.stop()
                 }
             }
             GameStates.INGAME_STATE -> {

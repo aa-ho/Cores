@@ -1,7 +1,7 @@
 package cores.listener
 
 import cores.Main
-import cores.Main.Companion.gameStateManager
+import cores.Main.Companion.plugin
 import cores.api.GlobalVars.PLAYERS
 import cores.gameStates.GameStates
 import org.bukkit.event.EventHandler
@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 class EntityDamageByEntityListener: Listener {
     @EventHandler
     fun entityDamageByEntity(e: EntityDamageByEntityEvent) {
-        when (gameStateManager.getCurrentGameState()) {
+        when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
                 e.isCancelled = true
             }

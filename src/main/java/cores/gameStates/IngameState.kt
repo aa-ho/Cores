@@ -1,14 +1,9 @@
 package cores.gameStates
 
-import cores.Main
-import cores.Main.Companion.gameStateManager
 import cores.Main.Companion.plugin
-import cores.Main.Companion.teamHelper
-import cores.api.GlobalVars.PLAYERS
 import cores.api.ImportantFunctions.clearAll
 import cores.api.ImportantFunctions.closeAllInventories
 import cores.api.ImportantFunctions.setIngameItemsAll
-import cores.api.ImportantFunctions.setIngamePlayerItems
 import cores.api.Messages
 import cores.api.Teams
 import cores.countdown.IngameTimer
@@ -25,7 +20,7 @@ class IngameState: GameState() {
             clearAll()
             setIngameItemsAll()
             closeAllInventories()
-            teamHelper.buildTeamInventory()
+            plugin.teamHelper.buildTeamInventory()
             ingameTimer.start()
         }
     }
@@ -40,8 +35,8 @@ class IngameState: GameState() {
     }
 
     fun isGameOver() {
-        if(teamHelper.teamSize(Teams.BLUE) == 0 || teamHelper.teamSize(Teams.RED) == 0) {
-            gameStateManager.setGameState(GameStates.END_STATE)
+        if(plugin.teamHelper.teamSize(Teams.BLUE) == 0 || plugin.teamHelper.teamSize(Teams.RED) == 0) {
+            plugin.gameStateManager.setGameState(GameStates.END_STATE)
         }
     }
 }

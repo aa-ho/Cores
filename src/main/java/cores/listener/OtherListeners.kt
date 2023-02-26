@@ -2,8 +2,7 @@ package cores.listener
 
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent
 import cores.Main
-import cores.Main.Companion.gameStateManager
-import cores.Main.Companion.teamHelper
+import cores.Main.Companion.plugin
 import cores.api.GlobalConst.LEAVE_GAME_ITEM_NAME
 import cores.api.GlobalConst.START_GAME_ITEM_NAME
 import cores.api.GlobalConst.TEAM_SELECTOR_ITEM_NAME
@@ -12,6 +11,7 @@ import cores.api.ImportantFunctions
 import cores.api.ImportantFunctions.kickPlayerLeave
 import cores.api.ImportantFunctions.setIngamePlayerItems
 import cores.api.Messages.BLUE_COLORED
+import cores.api.Messages.RANDOM_TEAM_COLORED
 import cores.api.Messages.RED_COLORED
 import cores.api.Messages.sendPlayer
 import cores.api.Teams
@@ -46,25 +46,37 @@ class OtherListeners : Listener {
         e.isCancelled = true
     }
 
+    private val itemClickCoolDown = arrayListOf<String>()
+    private fun addPlayerToItemClickCoolDown(name: String) {
+        itemClickCoolDown.add(name)
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, {
+            itemClickCoolDown.remove(name)
+        }, 10)
+    }
+
     @EventHandler
     fun inventoryClick(e: InventoryClickEvent) {
-        if(e.whoClicked !is Player) return
+        if (e.whoClicked !is Player) return
         val p = e.whoClicked as Player
-        if(gameStateManager.getCurrentGameState() == GameStates.INGAME_STATE && !PLAYERS.contains(p)) {
+        if (plugin.gameStateManager.getCurrentGameState() == GameStates.INGAME_STATE && !PLAYERS.contains(p)) {
             e.isCancelled = true
-            if(e.currentItem == null) return
-            if(e.currentItem!!.itemMeta == null) return
+            if (e.currentItem == null) return
+            if (e.currentItem!!.itemMeta == null) return
         } else {
             e.isCancelled = true
-            if(e.currentItem == null) return
-            if(e.currentItem!!.itemMeta == null) return
-            when(e.currentItem!!.itemMeta.displayName) {
+            if (e.currentItem == null) return
+            if (e.currentItem!!.itemMeta == null) return
+            if (itemClickCoolDown.contains(p.name)) return
+            addPlayerToItemClickCoolDown(p.name)
+            when (e.currentItem!!.itemMeta.displayName) {
                 RED_COLORED -> {
-                    teamHelper.joinTeam(p, Teams.RED)
+                    plugin.teamHelper.joinTeam(p, Teams.RED)
                 }
                 BLUE_COLORED -> {
-                    teamHelper.joinTeam(p, Teams.BLUE)
+                    plugin.teamHelper.joinTeam(p, Teams.BLUE)
                 }
+                RANDOM_TEAM_COLORED -> {
+                    plugin.teamHelper.willPutPlayerInRandomTeam(p)                }
             }
         }
     }
@@ -91,18 +103,19 @@ class OtherListeners : Listener {
             itemCoolDown.remove(name)
         }, 20)
     }
+
     @EventHandler
     fun playerInteractEvent(e: PlayerInteractEvent) {
-        when (gameStateManager.getCurrentGameState()) {
+        when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
                 e.isCancelled = true
-                if(itemCoolDown.contains(e.player.name)) return
+                if (itemCoolDown.contains(e.player.name)) return
                 addPlayerToItemCoolDown(e.player.name)
-                if (e.player.inventory.itemInMainHand.itemMeta== null || !e.player.inventory.itemInMainHand.itemMeta.hasDisplayName()) return
+                if (e.player.inventory.itemInMainHand.itemMeta == null || !e.player.inventory.itemInMainHand.itemMeta.hasDisplayName()) return
                 if (e.action == Action.RIGHT_CLICK_AIR || e.action == Action.RIGHT_CLICK_BLOCK
                     || e.action == Action.LEFT_CLICK_AIR || e.action == Action.LEFT_CLICK_BLOCK
                 ) {
-                    when(e.player.inventory.itemInMainHand.itemMeta.displayName) {
+                    when (e.player.inventory.itemInMainHand.itemMeta.displayName) {
                         START_GAME_ITEM_NAME -> {
                             ImportantFunctions.skipCountdown(e.player)
                         }
@@ -110,17 +123,16 @@ class OtherListeners : Listener {
                             kickPlayerLeave(e.player)
                         }
                         TEAM_SELECTOR_ITEM_NAME -> {
-                            teamHelper.openTeamInventory(e.player)
+                            plugin.teamHelper.openTeamInventory(e.player)
                         }
                     }
-                    sendPlayer(e.player, "test")
                 }
             }
             GameStates.INGAME_STATE -> {
                 if (!PLAYERS.contains(e.player)) {
                     e.isCancelled = true
                 } else {
-                    if(itemCoolDown.contains(e.player.name)) return
+                    if (itemCoolDown.contains(e.player.name)) return
                     addPlayerToItemCoolDown(e.player.name)
                     //TODO Spectator stuff!
                 }
@@ -131,14 +143,17 @@ class OtherListeners : Listener {
         }
         e.isCancelled = true
     }
+
     @EventHandler
     fun cancelEat(e: PlayerItemConsumeEvent) {
         e.isCancelled = true
     }
+
     @EventHandler
     fun coolDown(e: PlayerItemCooldownEvent) {
         e.isCancelled = true
     }
+
     @EventHandler
     fun swapItem(e: PlayerSwapHandItemsEvent) {
         e.isCancelled = true
@@ -163,14 +178,15 @@ class OtherListeners : Listener {
     fun entityDamage(e: EntityDamageEvent) {
         e.isCancelled = true
     }
+
     @EventHandler
     fun onDeath(e: PlayerDeathEvent) {
-        when(gameStateManager.getCurrentGameState()) {
+        when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
                 e.isCancelled = true
             }
             GameStates.INGAME_STATE -> {
-                if(PLAYERS.contains(e.player)) {
+                if (PLAYERS.contains(e.player)) {
                     e.player.inventory.clear()
                 } else e.isCancelled = true
             }
@@ -179,13 +195,14 @@ class OtherListeners : Listener {
             }
         }
     }
+
     @EventHandler
     fun onRespawn(e: PlayerRespawnEvent) {
-        when(gameStateManager.getCurrentGameState()) {
+        when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> {
             }
             GameStates.INGAME_STATE -> {
-                if(PLAYERS.contains(e.player)) {
+                if (PLAYERS.contains(e.player)) {
                     setIngamePlayerItems(e.player)
                 }
             }

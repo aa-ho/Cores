@@ -18,6 +18,7 @@ import cores.api.GlobalConst.BLUE_COMMAND
 import cores.api.GlobalConst.RED_COMMAND
 import cores.api.GlobalConst.SET_BEACON_COMMAND
 import cores.api.GlobalVars.PLAYERS
+import cores.api.ImportantFunctions.playSoundLevelSuccess
 import cores.api.ImportantFunctions.skipCountdown
 import cores.api.Messages.sendAllLobbyCountdownSkipped
 import cores.api.Messages.sendDoNotSpamCommand
@@ -49,7 +50,7 @@ class CoresCommand : CommandExecutor {
         commandCoolDown.add(name)
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, {
             commandCoolDown.remove(name)
-        }, 20)
+        }, 10)
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
@@ -79,15 +80,18 @@ class CoresCommand : CommandExecutor {
                                             SET_LOBBY_COMMAND -> {
                                                 configuration.setter.setLobbyLocation(p.location)
                                                 sendPLayerLobbySet(p)
+                                                playSoundLevelSuccess(p)
                                             }
                                             SET_TEAM_SPAWN -> {
                                                 if (args.size == 3) {
                                                     if (args[2] == RED_COMMAND) {
                                                         sendPlayerTeamSpawnSet(p, Teams.RED)
                                                         configuration.setter.setTeamSpawn(Teams.RED, p.location)
+                                                        playSoundLevelSuccess(p)
                                                     } else if (args[2] == BLUE_COMMAND) {
                                                         sendPlayerTeamSpawnSet(p, Teams.BLUE)
                                                         configuration.setter.setTeamSpawn(Teams.BLUE, p.location)
+                                                        playSoundLevelSuccess(p)
                                                     } else {
                                                         sendPlayerTeamSpawnSetHelp(p)
                                                     }
@@ -99,9 +103,10 @@ class CoresCommand : CommandExecutor {
                                                 if (args.size == 4) {
                                                     if (args[2] == RED_COMMAND) {
                                                         setBeacon(args[3], Teams.RED, p)
+                                                        playSoundLevelSuccess(p)
                                                     } else if (args[2] == BLUE_COMMAND) {
                                                         setBeacon(args[3], Teams.BLUE, p)
-
+                                                        playSoundLevelSuccess(p)
                                                     } else {
                                                         sendPlayerSetCoreLocHelp(p)
                                                     }

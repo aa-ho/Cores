@@ -1,7 +1,7 @@
 package cores.api
 
-import cores.Main.Companion.gameStateManager
-import cores.Main.Companion.teamHelper
+import com.comphenix.protocol.PacketType.Play
+import cores.Main.Companion.plugin
 import cores.api.GlobalConst.BEACON_BACK
 import cores.api.GlobalConst.BEACON_FRONT
 import cores.api.GlobalConst.BEACON_LEFT
@@ -29,6 +29,7 @@ object Messages {
 
     var RED_COLORED = "§cRot"
     var BLUE_COLORED = "§9Blau"
+    val RANDOM_TEAM_COLORED = "§7Zufällig"
 
     val GAME_IS_STARTING = "Das Spiel startet gerade."
     val GAME_IS_ENDING = "Das Spiel endet gerade."
@@ -44,14 +45,9 @@ object Messages {
         "§eDie $CONFIG_COLORED§e ist leer oder existiert §e§nnicht§e. Config wird generiert..."
     val NEW_CONFIG_CREATED = "§e Neue $CONFIG_COLORED§e erstellt."
     val CONFIG_LOADED = "$CONFIG_COLORED§e geladen. §a✓"
+    val LETS_GO = "§3Let's Go"
 
     private val COMMAND_HELPER_START = "Bitte nutze: §b§n/$CORES_COMMAND "
-
-    fun teamSelectItems(teams: Teams): String {
-        return if(teams == Teams.RED) "§b${teamHelper.teamSize(Teams.RED)}§7/§3${MAX_PLAYERS/2}"
-         else "§b${teamHelper.teamSize(Teams.BLUE)}§7/§3${MAX_PLAYERS/2}"
-
-    }
 
     private fun sendPlayerCommandHelper(p: Player, commands: String) {
         sendPlayer(p, "$COMMAND_HELPER_START$commands§7.")
@@ -100,10 +96,8 @@ object Messages {
     fun serverStopInXSeconds(i: Int) {
         broadcastMessage("Der Server stoppt in §b${if (i == 1) "einer" else i}§7 Sekunde${if (i == 1) "" else "n"}.")
     }
-
-    fun gameStartTitle(): String = "§bGo"
     fun gameTitle(): String = PREFIX_COLORED
-    fun playerJoinedGame(name: String) {
+    fun sendPlayerJoinedGame(name: String) {
         broadcastMessage("§a$name§7 hat das Spiel betreten (§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7).")
     }
 
@@ -114,8 +108,8 @@ object Messages {
     fun playerLeftGame(name: String) {
         broadcastMessage(
             "§c$name§7 hat das Spiel verlassen ${
-                if (gameStateManager.getCurrentGameState() == GameStates.END_STATE) ""
-                else if (gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) "(§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7)"
+                if (plugin.gameStateManager.getCurrentGameState() == GameStates.END_STATE) ""
+                else if (plugin.gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) "(§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7)"
                 else "(rejoin)"
             }."
         )
@@ -132,52 +126,101 @@ object Messages {
     fun gameEndsInXSeconds(minutes: Int, plural: Boolean = true) {
         broadcastMessage("Das Spiel endet in §b${if (plural) minutes else "einer"} §7Sekunde${if (plural) "n" else ""}.")
     }
+
     fun sendDoNotSpamCommand(p: Player) {
         sendPlayer(p, "Bitte spamme nicht.")
     }
+
     fun sendMissingPermission(p: Player, permission: String) {
         sendPlayer(p, permission)
     }
+
     fun sendPlayerOnlyLobbyStateStart(p: Player) {
         sendPlayer(p, "Du kannst den Befehl nur in der Warte-Lobby ausführen.")
     }
+
     fun sendPlayerLobbyCountdownNotSkippable(p: Player) {
         sendPlayer(p, "Du kannst den Countdown nicht mehr verkürzen.")
     }
+
     fun sendPlayerNoLobbyCountdownSkipBecauseNotEnoughPlayers(p: Player) {
         sendPlayer(p, "Es sind §7§nnicht§7 genügend Spieler in der Runde.")
     }
+
     fun sendAllLobbyCountdownSkipped(p: Player) {
         Bukkit.getOnlinePlayers().forEach {
-            if(it.name == p.name) {
+            if (it.name == p.name) {
                 sendPlayer(it, "Du hast den Lobby-Countdown verkürzt.")
             } else {
                 sendPlayer(it, "§a${p.name}§7 hat den Lobby-Countdown verkürzt.")
             }
         }
     }
+
     fun sendPLayerLobbySet(p: Player) {
         sendPlayer(p, "Lobby Spawnpunkt gesetzt.")
     }
+
     fun sendPlayerTeamSpawnSet(p: Player, team: Teams) {
-        sendPlayer(p, "Spawnpunkt für Team §${if(team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 gesetzt.")
+        sendPlayer(p, "Spawnpunkt für Team §${if (team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 gesetzt.")
     }
+
     fun sendPlayerCoreLocSet(p: Player, team: Teams, beacon: Beacons) {
-        sendPlayer(p, "${if(team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 §b$beacon §7gesetzt.")
+        sendPlayer(p, "${if (team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 §b$beacon §7gesetzt.")
     }
+
     fun sendPlayerTeamSpawnSetHelp(p: Player) {
         sendPlayerCommandHelper(p, "$SET_COMMAND $SET_TEAM_SPAWN $RED_COMMAND/$BLUE_COMMAND")
     }
+
     fun sendPlayerSetCoreLocHelp(p: Player) {
-        sendPlayerCommandHelper(p, "$SET_COMMAND $SET_BEACON_COMMAND $RED_COMMAND/$BLUE_COMMAND $BEACON_FRONT/$BEACON_BACK/$BEACON_LEFT/$BEACON_RIGHT")
+        sendPlayerCommandHelper(
+            p,
+            "$SET_COMMAND $SET_BEACON_COMMAND $RED_COMMAND/$BLUE_COMMAND $BEACON_FRONT/$BEACON_BACK/$BEACON_LEFT/$BEACON_RIGHT"
+        )
     }
+
     fun sendPlayerCoresCommand(p: Player) {
         sendPlayerCommandHelper(p, HELP_COMMAND)
     }
+
     fun sendPlayerTeamFull(p: Player, teams: Teams) {
-        sendPlayer(p, "Team ${if(teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 ist voll.")
+        sendPlayer(p, "Team ${if (teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 ist voll.")
     }
+
     fun sendPlayerJoinedTeam(p: Player, teams: Teams) {
-        sendPlayer(p, "Du bist Team ${if(teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 beigetreten.")
+        sendPlayer(p, "Du bist Team ${if (teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 beigetreten.")
+    }
+
+    fun sendPlayerAlreadyInTeam(p: Player, team: Teams) {
+        sendPlayer(p, "Du bist bereits in Team ${if (team == Teams.RED) RED_COLORED else BLUE_COLORED}§7.")
+    }
+
+    fun getPlayersScoreboard(): String {
+        return "§3${if (Bukkit.getOnlinePlayers().size == MAX_PLAYERS) "voll" else "${PLAYERS.size}§7 von §3$MAX_PLAYERS"}"
+    }
+
+    fun sendPlayerRandomTeam(p: Player) {
+        sendPlayer(p, "Du wirst beim Spielstart einem zufälligem Team zugeordnet.")
+    }
+
+    fun sendPlayerAlreadyRandomTeam(p: Player) {
+        sendPlayer(p, "Du wirst beim Spielstart bereits einem zufälligem Team zugeordnet.")
+    }
+
+    fun teamSelectItems(teams: Teams): String {
+        //TODO FIX!
+        /*return if(teams == Teams.RED) "§b${plugin.teamHelper.teamSize(Teams.RED)}§7/§3${MAX_PLAYERS/2}"
+        else "§b${plugin.teamHelper.teamSize(Teams.BLUE)}§7/§3${MAX_PLAYERS/2}"
+    */
+        return if (teams == Teams.RED) "§bX§7/§3${MAX_PLAYERS / 2}"
+        else "§bX§7/§3${MAX_PLAYERS / 2}"
+    }
+    fun scoreboardLobbyCountdown(seconds: Int): String {
+        return if(seconds < 1) {
+            LETS_GO
+        } else {
+            "§3$seconds Sekunde${if(seconds>1) "n" else ""}"
+        }
     }
 }

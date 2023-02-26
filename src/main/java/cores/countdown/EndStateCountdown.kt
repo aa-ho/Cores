@@ -25,7 +25,7 @@ class EndStateCountdown: Countdown() {
                 }
                 seconds--
 
-            }, 0, 20)
+            }, 0, 10)
         }
     }
 

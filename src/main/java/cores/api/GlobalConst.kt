@@ -1,6 +1,7 @@
 package cores.api
 
 import cores.api.Messages.BLUE_COLORED
+import cores.api.Messages.RANDOM_TEAM_COLORED
 import cores.api.Messages.RED_COLORED
 import cores.api.Messages.teamSelectItems
 import org.bukkit.Bukkit
@@ -50,10 +51,12 @@ object GlobalConst {
     val TEAM_SELECTOR_ITEM_NAME = "§7Team Auswahl"
     val TEAM_SELECTOR_ITEM = ItemBuilder(Material.RED_BED).setDisplayName(TEAM_SELECTOR_ITEM_NAME).build()
 
-    val TEAMSELECTORINVENTORYTITLE = TEAM_SELECTOR_ITEM_NAME
-    val TEAM_SELECTOR_INVENTORY=  Bukkit.createInventory(null, 54, TEAMSELECTORINVENTORYTITLE)
+    val TEAM_SELECTOR_INVENTORY_TITLE = TEAM_SELECTOR_ITEM_NAME
+    val TEAM_SELECTOR_INVENTORY=  Bukkit.createInventory(null, 9, TEAM_SELECTOR_INVENTORY_TITLE)
     val redTeamItem = ItemBuilder(Material.RED_CANDLE).setDisplayName(RED_COLORED).setLore(teamSelectItems(Teams.RED)).build()
+    val randomTeamItem = ItemBuilder(Material.WHITE_CANDLE).setDisplayName(RANDOM_TEAM_COLORED).build()
     val blueTeamItem = ItemBuilder(Material.BLUE_CANDLE).setDisplayName(BLUE_COLORED).setLore(teamSelectItems(Teams.BLUE)).build()
+
 
 
     var PERMISSION_BYPASS = "cores.bypass"
