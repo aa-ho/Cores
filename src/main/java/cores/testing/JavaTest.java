@@ -2,6 +2,7 @@ package cores.testing;
 
 
 import cores.gameStates.LobbyState;
+import org.bukkit.ChatColor;
 
 public class JavaTest {
 /*    private GameState currentGameState;
@@ -15,4 +16,5 @@ public class JavaTest {
     public void test(int id) {
         currentGameState = gameStates[id];
     }*/
+
 }

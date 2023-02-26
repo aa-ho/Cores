@@ -8,7 +8,7 @@ import cores.api.GlobalVars.GAME_STARTING
 import cores.api.ImportantFunctions
 import cores.api.ImportantFunctions.disEnchantStartItem
 import cores.api.ImportantFunctions.setLevelAll
-import cores.api.ImportantFunctions.updateScoreboardAll
+import cores.api.ImportantFunctions.updateLobbyScoreboardAll
 import cores.api.Messages
 import cores.api.Messages.LETS_GO
 import cores.api.Messages.gameStartInXSecond
@@ -24,7 +24,7 @@ class LobbyCountdown: Countdown() {
 
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
                 setLevelAll(seconds)
-                updateScoreboardAll()
+                updateLobbyScoreboardAll()
                 when (seconds) {
                     60, 30, 20, 10 -> {
                         ImportantFunctions.playSoundForAll(LOBBY_COUNTDOWN_SOUND)

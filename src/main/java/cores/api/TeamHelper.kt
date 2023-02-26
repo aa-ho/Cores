@@ -7,6 +7,7 @@ import cores.api.GlobalConst.redTeamItem
 import cores.api.GlobalConst.TEAM_SELECTOR_INVENTORY
 import cores.api.GlobalConst.TEAM_SELECTOR_INVENTORY_TITLE
 import cores.api.GlobalConst.randomTeamItem
+import cores.api.GlobalVars.PLAYERS
 import cores.api.ImportantFunctions.sendPlayerFailedSound
 import cores.api.ImportantFunctions.setPlayerTeamActionBar
 import cores.api.Messages.sendPlayerAlreadyInTeam
@@ -24,8 +25,8 @@ class TeamHelper {
     private val teamRedPlayers = ArrayList<Player>()
     private val teamBluePlayers = ArrayList<Player>()
 
-    private fun isTeamFull(teams: Teams): Boolean {
-        return if (teams == Teams.RED) teamRedPlayers.size >= MAX_PLAYERS / 2
+    private fun isTeamFull(teams: Team): Boolean {
+        return if (teams == Team.RED) teamRedPlayers.size >= MAX_PLAYERS / 2
         else teamBluePlayers.size >= MAX_PLAYERS / 2
     }
 
@@ -33,45 +34,58 @@ class TeamHelper {
         return teamRedPlayers.contains(p) || teamBluePlayers.contains(p)
     }
 
-    fun teamSize(team: Teams): Int {
-        return if (team == Teams.RED) teamRedPlayers.size
+    fun teamSize(team: Team): Int {
+        return if (team == Team.RED) teamRedPlayers.size
         else teamBluePlayers.size
     }
 
-    fun getPlayerTeam(p: Player): Teams {
-        return if (teamRedPlayers.contains(p)) Teams.RED
-        else Teams.BLUE
+    fun getPlayerTeam(p: Player): Team {
+        return if (teamRedPlayers.contains(p)) Team.RED
+        else Team.BLUE
     }
 
-    fun joinTeam(p: Player, team: Teams) {
+    fun assignPlayers() {
+        PLAYERS.forEach { (player, _) ->
+            if (!teamRedPlayers.contains(player) && !teamBluePlayers.contains(player)) {
+                val randomNumber = Math.random()
+                if (randomNumber < 0.5) {
+                    teamRedPlayers.add(player)
+                } else {
+                    teamBluePlayers.add(player)
+                }
+            }
+        }
+    }
+
+    fun joinTeam(p: Player, team: Team) {
         if (isPlayerInTeam(p) && getPlayerTeam(p) == team) {
             sendPlayerAlreadyInTeam(p, team)
             sendPlayerFailedSound(p)
         } else {
-            if (team == Teams.RED) {
-                if (isTeamFull(Teams.RED)) {
-                    sendPlayerTeamFull(p, Teams.RED)
+            if (team == Team.RED) {
+                if (isTeamFull(Team.RED)) {
+                    sendPlayerTeamFull(p, Team.RED)
                     sendPlayerFailedSound(p)
                 } else {
                     leaveTeam(p)
                     teamRedPlayers.add(p)
                     p.openInventory.close()
                     plugin.teamHelper.reopenTeamInventoryAll()
-                    sendPlayerJoinedTeam(p, Teams.RED)
-                    plugin.scoreboard.setLobbyScoreboard(p)
+                    sendPlayerJoinedTeam(p, Team.RED)
+                    plugin.scoreboard.updateLobbyScoreboard(p)
                     setPlayerTeamActionBar(p)
                 }
             } else {
-                if (isTeamFull(Teams.BLUE)) {
-                    sendPlayerTeamFull(p, Teams.BLUE)
+                if (isTeamFull(Team.BLUE)) {
+                    sendPlayerTeamFull(p, Team.BLUE)
                     sendPlayerFailedSound(p)
                 } else {
                     leaveTeam(p)
                     teamBluePlayers.add(p)
                     p.openInventory.close()
                     plugin.teamHelper.reopenTeamInventoryAll()
-                    sendPlayerJoinedTeam(p, Teams.BLUE)
-                    plugin.scoreboard.setLobbyScoreboard(p)
+                    sendPlayerJoinedTeam(p, Team.BLUE)
+                    plugin.scoreboard.updateLobbyScoreboard(p)
                     setPlayerTeamActionBar(p)
                 }
             }
@@ -79,10 +93,10 @@ class TeamHelper {
     }
 
     fun leaveTeam(p: Player) {
-        val team: Teams?
+        val team: Team?
         if (isPlayerInTeam(p)) {
             team = getPlayerTeam(p)
-            if (team == Teams.RED) {
+            if (team == Team.RED) {
                 if (teamRedPlayers.contains(p)) {
                     teamRedPlayers.remove(p)
                     plugin.teamHelper.reopenTeamInventoryAll()
@@ -93,18 +107,19 @@ class TeamHelper {
                     plugin.teamHelper.reopenTeamInventoryAll()
                 }
             }
-            redTeamItem.lore = arrayListOf(teamSelectItems(Teams.RED))
-            blueTeamItem.lore = arrayListOf(teamSelectItems(Teams.BLUE))
+            redTeamItem.lore = arrayListOf(teamSelectItems(Team.RED))
+            blueTeamItem.lore = arrayListOf(teamSelectItems(Team.BLUE))
         }
     }
+
     fun willPutPlayerInRandomTeam(p: Player) {
-        if(!isPlayerInTeam(p)) {
+        if (!isPlayerInTeam(p)) {
             sendPlayerAlreadyRandomTeam(p)
             sendPlayerFailedSound(p)
         } else {
             leaveTeam(p)
-                sendPlayerRandomTeam(p)
-                p.openInventory.close()
+            sendPlayerRandomTeam(p)
+            p.openInventory.close()
         }
     }
 

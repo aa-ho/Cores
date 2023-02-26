@@ -20,8 +20,9 @@ object Paths {
     const val CONFIG_TEAM_CATEGORY_BLUE = "blue."
     const val CONFIG_TEAM_SPAWN_RED = "${CONFIG_TEAM_CATEGORY_RED}team_spawn_red"
     const val CONFIG_TEAM_SPAWN_BLUE = "${CONFIG_TEAM_CATEGORY_BLUE}team_spawn_blue"
+    const val CONFIG_SPECTATOR_SPAWN = "spectator_spawn_location"
     const val CONFIG_BEACON_FRONT = "beacon_front"
     const val CONFIG_BEACON_BACK = "beacon_back"
     const val CONFIG_BEACON_LEFT = "beacon_left"
-    const val CONFIG_BEAON_RIGHT = "beacon_right"
+    const val CONFIG_BEACON_RIGHT = "beacon_right"
 }

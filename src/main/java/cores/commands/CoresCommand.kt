@@ -2,13 +2,11 @@ package cores.commands
 
 import cores.Main.Companion.configuration
 import cores.Main.Companion.plugin
-import cores.api.Beacons
+import cores.api.Beacon
 import cores.api.GlobalConst.BEACON_BACK
 import cores.api.GlobalConst.BEACON_FRONT
 import cores.api.GlobalConst.BEACON_LEFT
 import cores.api.GlobalConst.BEACON_RIGHT
-import cores.api.GlobalConst.LOBBY_COUNTDOWN_SKIP_SECONDS
-import cores.api.GlobalConst.MIN_PLAYERS
 import cores.api.GlobalConst.PERMISSION_BYPASS
 import cores.api.GlobalConst.SET_COMMAND
 import cores.api.GlobalConst.SET_LOBBY_COMMAND
@@ -17,27 +15,21 @@ import cores.api.GlobalConst.START_COMMAND
 import cores.api.GlobalConst.BLUE_COMMAND
 import cores.api.GlobalConst.RED_COMMAND
 import cores.api.GlobalConst.SET_BEACON_COMMAND
-import cores.api.GlobalVars.PLAYERS
+import cores.api.GlobalConst.SET_SPECTATOR_SPAWN
 import cores.api.ImportantFunctions.playSoundLevelSuccess
 import cores.api.ImportantFunctions.skipCountdown
-import cores.api.Messages.sendAllLobbyCountdownSkipped
 import cores.api.Messages.sendDoNotSpamCommand
 import cores.api.Messages.sendMissingPermission
 import cores.api.Messages.sendPLayerLobbySet
-import cores.api.Messages.sendPlayer
 import cores.api.Messages.sendPlayerCoreLocSet
 import cores.api.Messages.sendPlayerCoresCommand
-import cores.api.Messages.sendPlayerLobbyCountdownNotSkippable
-import cores.api.Messages.sendPlayerNoLobbyCountdownSkipBecauseNotEnoughPlayers
-import cores.api.Messages.sendPlayerOnlyLobbyStateStart
 import cores.api.Messages.sendPlayerSetCoreLocHelp
+import cores.api.Messages.sendPlayerSpectatorSpawnSet
 import cores.api.Messages.sendPlayerTeamSpawnSet
 import cores.api.Messages.sendPlayerTeamSpawnSetHelp
-import cores.api.Teams
-import cores.gameStates.GameStates
+import cores.api.Team
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -85,12 +77,12 @@ class CoresCommand : CommandExecutor {
                                             SET_TEAM_SPAWN -> {
                                                 if (args.size == 3) {
                                                     if (args[2] == RED_COMMAND) {
-                                                        sendPlayerTeamSpawnSet(p, Teams.RED)
-                                                        configuration.setter.setTeamSpawn(Teams.RED, p.location)
+                                                        sendPlayerTeamSpawnSet(p, Team.RED)
+                                                        configuration.setter.setTeamSpawn(Team.RED, p.location)
                                                         playSoundLevelSuccess(p)
                                                     } else if (args[2] == BLUE_COMMAND) {
-                                                        sendPlayerTeamSpawnSet(p, Teams.BLUE)
-                                                        configuration.setter.setTeamSpawn(Teams.BLUE, p.location)
+                                                        sendPlayerTeamSpawnSet(p, Team.BLUE)
+                                                        configuration.setter.setTeamSpawn(Team.BLUE, p.location)
                                                         playSoundLevelSuccess(p)
                                                     } else {
                                                         sendPlayerTeamSpawnSetHelp(p)
@@ -99,13 +91,18 @@ class CoresCommand : CommandExecutor {
                                                     sendPlayerTeamSpawnSetHelp(p)
                                                 }
                                             }
+                                            SET_SPECTATOR_SPAWN -> {
+                                                configuration.setter.setSpectatorSpawn(p.location)
+                                                sendPlayerSpectatorSpawnSet(p)
+                                                playSoundLevelSuccess(p)
+                                            }
                                             SET_BEACON_COMMAND -> {
                                                 if (args.size == 4) {
                                                     if (args[2] == RED_COMMAND) {
-                                                        setBeacon(args[3], Teams.RED, p)
+                                                        setBeacon(args[3], Team.RED, p)
                                                         playSoundLevelSuccess(p)
                                                     } else if (args[2] == BLUE_COMMAND) {
-                                                        setBeacon(args[3], Teams.BLUE, p)
+                                                        setBeacon(args[3], Team.BLUE, p)
                                                         playSoundLevelSuccess(p)
                                                     } else {
                                                         sendPlayerSetCoreLocHelp(p)
@@ -128,38 +125,38 @@ class CoresCommand : CommandExecutor {
         return false
     }
 
-    private fun setBeacon(beacon: String, team: Teams, p: Player) {
+    private fun setBeacon(beacon: String, team: Team, p: Player) {
         val blockPosition: Location =
             p.location.block.getRelative(BlockFace.SELF).location
         when (beacon) {
             BEACON_FRONT -> {
                 configuration.setter.setBeacon(
                     team,
-                    Beacons.FRONT,
+                    Beacon.Front,
                     blockPosition
                 )
-                sendPlayerCoreLocSet(p, team, Beacons.FRONT)
+                sendPlayerCoreLocSet(p, team, Beacon.Front)
             }
             BEACON_BACK -> {
                 configuration.setter.setBeacon(
-                    team, Beacons.BACK,
+                    team, Beacon.Back,
                     blockPosition
                 )
-                sendPlayerCoreLocSet(p, team, Beacons.BACK)
+                sendPlayerCoreLocSet(p, team, Beacon.Back)
             }
             BEACON_LEFT -> {
                 configuration.setter.setBeacon(
-                    team, Beacons.LEFT,
+                    team, Beacon.Left,
                     blockPosition
                 )
-                sendPlayerCoreLocSet(p, team, Beacons.LEFT)
+                sendPlayerCoreLocSet(p, team, Beacon.Left)
             }
             BEACON_RIGHT -> {
                 configuration.setter.setBeacon(
-                    team, Beacons.RIGHT,
+                    team, Beacon.Right,
                     blockPosition
                 )
-                sendPlayerCoreLocSet(p, team, Beacons.RIGHT)
+                sendPlayerCoreLocSet(p, team, Beacon.Right)
             }
             else -> {
                 sendPlayerSetCoreLocHelp(p)

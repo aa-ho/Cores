@@ -3,6 +3,7 @@ package cores.countdown
 import cores.Main.Companion.plugin
 import cores.api.GlobalConst.INGAME_TOTAL_SECONDS
 import cores.api.ImportantFunctions.playTimeReminderSoundToAll
+import cores.api.ImportantFunctions.updateInGameScoreboardAll
 import cores.api.Messages.gameEndsInXMinutes
 import cores.api.Messages.gameEndsInXSeconds
 import cores.api.Messages.halftimeBroadcast
@@ -16,6 +17,7 @@ class IngameTimer : Countdown() {
         if (!isIdling) {
             isIdling = true
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
+                updateInGameScoreboardAll()
                 when(seconds) {
                     INGAME_TOTAL_SECONDS/2 -> {
                         halftimeBroadcast()

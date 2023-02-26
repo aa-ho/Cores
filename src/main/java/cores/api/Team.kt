@@ -1,5 +1,5 @@
 package cores.api
 
-enum class Teams {
+enum class  Team {
     RED, BLUE
 }

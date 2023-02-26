@@ -2,13 +2,11 @@ package cores
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
-import cores.api.Cores
+import cores.api.*
 import cores.api.GlobalConst.CORES_COMMAND
 import cores.api.GlobalConst.DATE_TEXT_FORMAT
 import cores.api.GlobalConst.START_COMMAND
 import cores.api.Messages.sendPluginDisEnabled
-import cores.api.Scoreboard
-import cores.api.TeamHelper
 import cores.commands.CoresCommand
 import cores.config.Configuration
 import cores.countdown.ActionBarIdle
@@ -42,6 +40,7 @@ class Main : JavaPlugin() {
     val teamHelper = TeamHelper()
     val scoreboard = Scoreboard()
     val actionBarIdle = ActionBarIdle() //TODO Don't like that!
+    val rankHelper = RankHelper()
 
 
     override fun onEnable() {

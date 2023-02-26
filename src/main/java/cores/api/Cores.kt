@@ -1,12 +1,15 @@
 package cores.api
 
+import cores.Main.Companion.plugin
+import cores.api.ImportantFunctions.updateInGameScoreboardAll
+
 class Cores {
 
-    private val redCores = ArrayList<Beacons>()
-    private val blueCores = ArrayList<Beacons>()
+    private val redCores = ArrayList<Beacon>()
+    private val blueCores = ArrayList<Beacon>()
 
-    fun addCoreToTeam(team: Teams, beacon: Beacons) {
-        if (team == Teams.RED) {
+    fun addCoreToTeam(team: Team, beacon: Beacon) {
+        if (team == Team.RED) {
             if (!redCores.contains(beacon)) {
                 redCores.add(beacon)
             }
@@ -17,25 +20,26 @@ class Cores {
         }
     }
 
-    fun removeCoreFromTeam(team: Teams, beacon: Beacons) {
-        if (team == Teams.RED) {
-            if (hasTeamCores(Teams.RED)) {
+    fun removeCoreFromTeam(team: Team, beacon: Beacon) {
+        if (team == Team.RED) {
+            if (hasTeamCores(Team.RED)) {
                 redCores.remove(beacon)
             }
-        } else if (team == Teams.BLUE) {
-            if (hasTeamCores(Teams.BLUE)) {
+        } else if (team == Team.BLUE) {
+            if (hasTeamCores(Team.BLUE)) {
                 blueCores.remove(beacon)
             }
         }
+        updateInGameScoreboardAll()
     }
 
     fun addAllCores() {
-        for(i in Beacons.values()) {
+        for(i in Beacon.values()) {
             redCores.add(i)
             blueCores.add(i)
         }
     }
 
-    private fun hasTeamCores(team: Teams): Boolean = if (team == Teams.RED) redCores.size != 0 else blueCores.size != 0
+    private fun hasTeamCores(team: Team): Boolean = if (team == Team.RED) redCores.size != 0 else blueCores.size != 0
 
 }

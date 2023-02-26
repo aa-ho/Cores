@@ -18,19 +18,23 @@ object GlobalConst {
     var DATE_TEXT_FORMAT = "dd.MM.yyyy HH:mm"
     var LOBBY_COUNTDOWN_SKIP_SECONDS = 10
 
-    var LOBBY_SPAWN_LOCATION = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var TEAM_SPAWN_RED_LOCATION = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var TEAM_SPAWN_BLUE_LOCATION = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
+    val defaultLocation = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
 
-    var RED_CORE_FRONT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var RED_CORE_BACK = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var RED_CORE_LEFT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var RED_CORE_RIGHT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
+    var LOBBY_SPAWN_LOCATION = defaultLocation
+    var TEAM_SPAWN_RED_LOCATION = defaultLocation
+    var TEAM_SPAWN_BLUE_LOCATION = defaultLocation
+    var SPECTATOR_SPAWN_LOCATION = defaultLocation
 
-    var BLUE_CORE_FRONT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var BLUE_CORE_BACK = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var BLUE_CORE_LEFT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
-    var BLUE_CORE_RIGHT = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
+
+    var RED_CORE_FRONT = defaultLocation
+    var RED_CORE_BACK = defaultLocation
+    var RED_CORE_LEFT = defaultLocation
+    var RED_CORE_RIGHT = defaultLocation
+
+    var BLUE_CORE_FRONT = defaultLocation
+    var BLUE_CORE_BACK = defaultLocation
+    var BLUE_CORE_LEFT = defaultLocation
+    var BLUE_CORE_RIGHT = defaultLocation
 
     val swordItem = ItemBuilder(Material.STONE_SWORD).build()
     val iron_pickage = ItemBuilder(Material.IRON_PICKAXE).build()
@@ -53,9 +57,9 @@ object GlobalConst {
 
     val TEAM_SELECTOR_INVENTORY_TITLE = TEAM_SELECTOR_ITEM_NAME
     val TEAM_SELECTOR_INVENTORY=  Bukkit.createInventory(null, 9, TEAM_SELECTOR_INVENTORY_TITLE)
-    val redTeamItem = ItemBuilder(Material.RED_CANDLE).setDisplayName(RED_COLORED).setLore(teamSelectItems(Teams.RED)).build()
+    val redTeamItem = ItemBuilder(Material.RED_CANDLE).setDisplayName(RED_COLORED).setLore(teamSelectItems(Team.RED)).build()
     val randomTeamItem = ItemBuilder(Material.WHITE_CANDLE).setDisplayName(RANDOM_TEAM_COLORED).build()
-    val blueTeamItem = ItemBuilder(Material.BLUE_CANDLE).setDisplayName(BLUE_COLORED).setLore(teamSelectItems(Teams.BLUE)).build()
+    val blueTeamItem = ItemBuilder(Material.BLUE_CANDLE).setDisplayName(BLUE_COLORED).setLore(teamSelectItems(Team.BLUE)).build()
 
 
 
@@ -65,6 +69,7 @@ object GlobalConst {
     val SET_COMMAND = "set"
     val SET_LOBBY_COMMAND = "lobby"
     val SET_TEAM_SPAWN = "spawn"
+    val SET_SPECTATOR_SPAWN = "spectator"
     val RED_COMMAND = "red"
     val BLUE_COMMAND = "blue"
     val HELP_COMMAND = "help"

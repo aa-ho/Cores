@@ -3,8 +3,11 @@ package cores.api
 import cores.Main.Companion.plugin
 import cores.api.GlobalConst.LEAVE_GAME_ITEM
 import cores.api.GlobalConst.PERMISSION_BYPASS
+import cores.api.GlobalConst.SPECTATOR_SPAWN_LOCATION
 import cores.api.GlobalConst.STAR_GAME_ITEM
 import cores.api.GlobalConst.TEAM_SELECTOR_ITEM
+import cores.api.GlobalConst.TEAM_SPAWN_BLUE_LOCATION
+import cores.api.GlobalConst.TEAM_SPAWN_RED_LOCATION
 import cores.api.GlobalConst.arrowItems
 import cores.api.GlobalConst.bowItem
 import cores.api.GlobalConst.goldenAppleItem
@@ -17,6 +20,7 @@ import cores.api.Messages.BLUE_COLORED
 import cores.api.Messages.KICK_LEAVE_ITEM
 import cores.api.Messages.RANDOM_TEAM_COLORED
 import cores.api.Messages.RED_COLORED
+import cores.api.Messages.SPECTATOR_COLORED
 import cores.gameStates.GameStates
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -61,6 +65,16 @@ object ImportantFunctions {
         }
     }
 
+    fun teleportAllTeams() {
+        Bukkit.getOnlinePlayers().forEach {
+            if (!PLAYERS.containsKey(it))
+                it.teleport(SPECTATOR_SPAWN_LOCATION)
+            else if (plugin.teamHelper.getPlayerTeam(it) == Team.RED)
+                it.teleport(TEAM_SPAWN_RED_LOCATION)
+            else it.teleport(TEAM_SPAWN_BLUE_LOCATION)
+        }
+    }
+
     fun clearAll() {
         Bukkit.getOnlinePlayers().forEach {
             it.inventory.clear()
@@ -88,6 +102,7 @@ object ImportantFunctions {
             if (it.hasPermission(PERMISSION_BYPASS)) it.inventory.getItem(0)?.removeEnchantment(Enchantment.LUCK)
         }
     }
+    //TODO setMOTD!
 
     fun skipCountdown(p: Player) {
         if (plugin.gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) {
@@ -118,6 +133,12 @@ object ImportantFunctions {
         }
     }
 
+    fun setPlayersSurvival() {
+        PLAYERS.forEach {
+            it.key.gameMode = GameMode.SURVIVAL
+        }
+    }
+
     fun setIngamePlayerItems(p: Player) {
         p.inventory.setItem(0, swordItem)
         p.inventory.setItem(1, bowItem)
@@ -132,9 +153,15 @@ object ImportantFunctions {
         //TODO...
     }
 
-    fun updateScoreboardAll() {
+    fun updateLobbyScoreboardAll() {
         Bukkit.getOnlinePlayers().forEach {
-            plugin.scoreboard.setLobbyScoreboard(it)
+            plugin.scoreboard.updateLobbyScoreboard(it)
+        }
+    }
+
+    fun updateInGameScoreboardAll() {
+        Bukkit.getOnlinePlayers().forEach {
+            plugin.scoreboard.updateInGameScoreboard(it)
         }
     }
 
@@ -170,9 +197,13 @@ object ImportantFunctions {
         p.playSound(p.location, Sound.BLOCK_ANVIL_LAND, 1.0F, 1.0F)
     }
 
+    fun sendPlayerKillSound(p: Player) {
+        p.playSound(p.location, Sound.ITEM_HONEY_BOTTLE_DRINK, 2.0F, 2.0F)
+    }
+
     fun setPlayerTeamActionBar(p: Player) {
-        if(PLAYERS.contains(p)) {
-            val team: Teams?
+        if (PLAYERS.containsKey(p)) {
+            val team: Team?
             if (!plugin.teamHelper.isPlayerInTeam(p)) {
                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(RANDOM_TEAM_COLORED))
                 return
@@ -180,10 +211,10 @@ object ImportantFunctions {
             team = plugin.teamHelper.getPlayerTeam(p)
             p.spigot().sendMessage(
                 ChatMessageType.ACTION_BAR,
-                TextComponent(if (team == Teams.RED) RED_COLORED else BLUE_COLORED)
+                TextComponent(if (team == Team.RED) RED_COLORED else BLUE_COLORED)
             )
         } else {
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent("§7Zuschauer"))
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(SPECTATOR_COLORED))
         }
     }
 

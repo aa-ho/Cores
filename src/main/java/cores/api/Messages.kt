@@ -1,6 +1,5 @@
 package cores.api
 
-import com.comphenix.protocol.PacketType.Play
 import cores.Main.Companion.plugin
 import cores.api.GlobalConst.BEACON_BACK
 import cores.api.GlobalConst.BEACON_FRONT
@@ -30,6 +29,7 @@ object Messages {
     var RED_COLORED = "§cRot"
     var BLUE_COLORED = "§9Blau"
     val RANDOM_TEAM_COLORED = "§7Zufällig"
+    val SPECTATOR_COLORED = "§7Zuschauer"
 
     val GAME_IS_STARTING = "Das Spiel startet gerade."
     val GAME_IS_ENDING = "Das Spiel endet gerade."
@@ -97,17 +97,17 @@ object Messages {
         broadcastMessage("Der Server stoppt in §b${if (i == 1) "einer" else i}§7 Sekunde${if (i == 1) "" else "n"}.")
     }
     fun gameTitle(): String = PREFIX_COLORED
-    fun sendPlayerJoinedGame(name: String) {
-        broadcastMessage("§a$name§7 hat das Spiel betreten (§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7).")
+    fun sendPlayerJoinedGame(p: Player) {
+        broadcastMessage("${plugin.rankHelper.getPlayersRankColor(p)}${p.name}§7 hat das Spiel betreten (§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7).")
     }
 
-    fun playerRejoinedGame(name: String) {
-        broadcastMessage("§a$name§7 hat das Spiel wieder betreten.")
+    fun playerRejoinedGame(p: Player) {
+        broadcastMessage("${p.name}§7 hat das Spiel wieder betreten.")
     }
 
-    fun playerLeftGame(name: String) {
+    fun playerLeftGame(p: Player) {
         broadcastMessage(
-            "§c$name§7 hat das Spiel verlassen ${
+            "${p.name}§7 hat das Spiel verlassen ${
                 if (plugin.gameStateManager.getCurrentGameState() == GameStates.END_STATE) ""
                 else if (plugin.gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) "(§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7)"
                 else "(rejoin)"
@@ -160,13 +160,16 @@ object Messages {
     fun sendPLayerLobbySet(p: Player) {
         sendPlayer(p, "Lobby Spawnpunkt gesetzt.")
     }
-
-    fun sendPlayerTeamSpawnSet(p: Player, team: Teams) {
-        sendPlayer(p, "Spawnpunkt für Team §${if (team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 gesetzt.")
+    fun sendPlayerSpectatorSpawnSet(p: Player) {
+        sendPlayer(p, "Spectator Spawnpunkt gesetzt.")
     }
 
-    fun sendPlayerCoreLocSet(p: Player, team: Teams, beacon: Beacons) {
-        sendPlayer(p, "${if (team == Teams.RED) RED_COLORED else BLUE_COLORED}§7 §b$beacon §7gesetzt.")
+    fun sendPlayerTeamSpawnSet(p: Player, team: Team) {
+        sendPlayer(p, "Spawnpunkt für Team §${if (team == Team.RED) RED_COLORED else BLUE_COLORED}§7 gesetzt.")
+    }
+
+    fun sendPlayerCoreLocSet(p: Player, team: Team, beacon: Beacon) {
+        sendPlayer(p, "${if (team == Team.RED) RED_COLORED else BLUE_COLORED}§7 §b$beacon §7gesetzt.")
     }
 
     fun sendPlayerTeamSpawnSetHelp(p: Player) {
@@ -184,16 +187,16 @@ object Messages {
         sendPlayerCommandHelper(p, HELP_COMMAND)
     }
 
-    fun sendPlayerTeamFull(p: Player, teams: Teams) {
-        sendPlayer(p, "Team ${if (teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 ist voll.")
+    fun sendPlayerTeamFull(p: Player, teams: Team) {
+        sendPlayer(p, "Team ${if (teams == Team.RED) RED_COLORED else BLUE_COLORED}§7 ist voll.")
     }
 
-    fun sendPlayerJoinedTeam(p: Player, teams: Teams) {
-        sendPlayer(p, "Du bist Team ${if (teams == Teams.RED) RED_COLORED else BLUE_COLORED}§7 beigetreten.")
+    fun sendPlayerJoinedTeam(p: Player, teams: Team) {
+        sendPlayer(p, "Du bist Team ${if (teams == Team.RED) RED_COLORED else BLUE_COLORED}§7 beigetreten.")
     }
 
-    fun sendPlayerAlreadyInTeam(p: Player, team: Teams) {
-        sendPlayer(p, "Du bist bereits in Team ${if (team == Teams.RED) RED_COLORED else BLUE_COLORED}§7.")
+    fun sendPlayerAlreadyInTeam(p: Player, team: Team) {
+        sendPlayer(p, "Du bist bereits in Team ${if (team == Team.RED) RED_COLORED else BLUE_COLORED}§7.")
     }
 
     fun getPlayersScoreboard(): String {
@@ -208,12 +211,12 @@ object Messages {
         sendPlayer(p, "Du wirst beim Spielstart bereits einem zufälligem Team zugeordnet.")
     }
 
-    fun teamSelectItems(teams: Teams): String {
+    fun teamSelectItems(teams: Team): String {
         //TODO FIX!
         /*return if(teams == Teams.RED) "§b${plugin.teamHelper.teamSize(Teams.RED)}§7/§3${MAX_PLAYERS/2}"
         else "§b${plugin.teamHelper.teamSize(Teams.BLUE)}§7/§3${MAX_PLAYERS/2}"
     */
-        return if (teams == Teams.RED) "§bX§7/§3${MAX_PLAYERS / 2}"
+        return if (teams == Team.RED) "§bX§7/§3${MAX_PLAYERS / 2}"
         else "§bX§7/§3${MAX_PLAYERS / 2}"
     }
     fun scoreboardLobbyCountdown(seconds: Int): String {
@@ -221,6 +224,35 @@ object Messages {
             LETS_GO
         } else {
             "§3$seconds Sekunde${if(seconds>1) "n" else ""}"
+        }
+    }
+    fun sendPlayerKilledByPlayer(player: Player, killer: Player) {
+        val playerColored = "${plugin.rankHelper.getPlayersRankColor(player)}${player.name}"
+        val killerColored = "${plugin.rankHelper.getPlayersRankColor(killer)}${killer.name}"
+        Bukkit.getOnlinePlayers().forEach {
+            when (it.name) {
+                player.name -> sendPlayer(it, "Du wurdest von $killerColored§7 getötet.")
+                killer.name -> sendPlayer(it, "Du hast $playerColored§7 getötet.")
+                else -> sendPlayer(it, "$playerColored§7 wurde von $killerColored§7 getötet.")
+            }
+        }
+    }
+    fun sendPlayerDied(p: Player) {
+        val playerColored = "${plugin.rankHelper.getPlayersRankColor(p)}${p.name}"
+        Bukkit.getOnlinePlayers().forEach {
+            if(it.name==p.name) sendPlayer(it, "Du bist gestorben.")
+            else sendPlayer(it, "$playerColored§7 ist gestorben.")
+        }
+    }
+    //TODO Core....
+    fun sendPlayerCoreDestroyed(p: Player, ) {
+        val playerColored = "${plugin.rankHelper.getPlayersRankColor(p)}${p.name}"
+        Bukkit.getOnlinePlayers().forEach {
+            if(it.name == p.name) {
+                //TODO DO stuff...
+            } else {
+                //TODO DO stuff...
+            }
         }
     }
 }
