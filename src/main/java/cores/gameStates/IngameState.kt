@@ -44,6 +44,15 @@ class IngameState: GameState() {
     fun isGameOver() {
         if(plugin.teamHelper.teamSize(Team.BLUE) == 0 || plugin.teamHelper.teamSize(Team.RED) == 0) {
             plugin.gameStateManager.setGameState(GameStates.END_STATE)
+        } else {
+            var count = 0
+            PLAYERS.forEach {
+                if(it.value) {
+                    count++
+                    if(count>1) return
+                }
+            }
+            plugin.gameStateManager.setGameState(GameStates.END_STATE)
         }
     }
 }

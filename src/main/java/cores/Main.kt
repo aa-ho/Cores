@@ -78,6 +78,6 @@ class Main : JavaPlugin() {
         registerEvent(PlayerQuitListener())
         registerEvent(EntityDamageByEntityListener())
         registerEvent(BlockBreakListener())
-        registerEvent(OtherListeners())
+        //registerEvent(OtherListeners())
     }
 }

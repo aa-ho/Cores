@@ -12,16 +12,21 @@ import org.bukkit.event.block.BlockBreakEvent
 
 class BlockBreakListener : Listener {
     @EventHandler
-    fun blockBreak(e: BlockBreakEvent) {
+    fun onBlockBreak(e: BlockBreakEvent) {
+        sendPlayer(e.player, "häää -1")
         when (plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> e.isCancelled = true
             GameStates.END_STATE -> e.isCancelled = true
             GameStates.INGAME_STATE -> {
+                sendPlayer(e.player, "häää")
                 if (PLAYERS.containsKey(e.player)) {
+                    sendPlayer(e.player, "häää2")
                     if (e.block.type == Material.BEACON) {
+                        sendPlayer(e.player, "häää3")
                         sendPlayer(e.player, PREFIX_COLORED)
                     } else return
                 } else {
+                    sendPlayer(e.player, "häää4")
                     e.isCancelled = true
                 }
             }

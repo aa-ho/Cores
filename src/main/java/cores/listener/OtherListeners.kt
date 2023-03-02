@@ -39,7 +39,7 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.player.*
 
 class OtherListeners : Listener {
-    @EventHandler
+/*    @EventHandler
     fun playerInteractAtEntity(e: PlayerInteractAtEntityEvent) {
         //e.isCancelled = true //TODO??
     }
@@ -69,7 +69,7 @@ class OtherListeners : Listener {
         if (e.whoClicked !is Player) return
         val p = e.whoClicked as Player
         if (plugin.gameStateManager.getCurrentGameState() == GameStates.INGAME_STATE) {
-            if(PLAYERS.containsKey(p)) return
+            if (PLAYERS.containsKey(p)) return
             e.isCancelled = true
             if (e.currentItem == null) return
             if (e.currentItem!!.itemMeta == null) return
@@ -93,10 +93,10 @@ class OtherListeners : Listener {
         }
     }
 
-/*    @EventHandler
+*//*    @EventHandler
     fun inv(e: InventoryMoveItemEvent) {
         if (plugin.gameStateManager.getCurrentGameState() != GameStates.INGAME_STATE) e.isCancelled = true
-    }*/
+    }*//*
 
     @EventHandler
     fun playerDropItem(e: PlayerDropItemEvent) {
@@ -155,15 +155,15 @@ class OtherListeners : Listener {
         e.isCancelled = true
     }
 
-/*    @EventHandler
+*//*    @EventHandler
     fun cancelEat(e: PlayerItemConsumeEvent) {
         if (plugin.gameStateManager.getCurrentGameState() != GameStates.INGAME_STATE) e.isCancelled = true
-    }*/
+    }*//*
 
-/*    @EventHandler
+*//*    @EventHandler
     fun coolDown(e: PlayerItemCooldownEvent) {
         //TODO???
-    }*/
+    }*//*
 
     @EventHandler
     fun eat(e: FoodLevelChangeEvent) {
@@ -200,26 +200,24 @@ class OtherListeners : Listener {
                 if (PLAYERS.containsKey(e.player)) {
                     e.drops.clear()
                     setIngamePlayerItems(e.player)
-                    if (plugin.teamHelper.getPlayerTeam(e.player) == Team.RED) {
-                        e.player.teleport(TEAM_SPAWN_RED_LOCATION)
-                    } else e.player.teleport(TEAM_SPAWN_BLUE_LOCATION)
+                    e.player.spigot().respawn()
+                    if (plugin.teamHelper.getPlayerTeam(e.player) == Team.RED) e.player.teleport(TEAM_SPAWN_RED_LOCATION)
+                    else e.player.teleport(TEAM_SPAWN_BLUE_LOCATION)
                     if (e.player.killer != null) {
                         sendPlayerKilledByPlayer(e.player, e.player.killer!!)
                         sendPlayerKillSound(e.player.killer!!)
                         //TODO update scoreboard?
                     } else {
                         //TODO mor reasons...
-/*                        when(e.player.lastDamageCause) {
-                        }*/
+*//*                        when(e.player.lastDamageCause) {
+                        }*//*
                         sendPlayerDied(e.player)
                     }
                 } else e.isCancelled = true
-                e.player.spigot().respawn()
-
             }
             GameStates.LOBBY_STATE -> e.isCancelled = true
             GameStates.END_STATE -> e.isCancelled = true
         }
-    }
+    }*/
 
 }

@@ -34,9 +34,7 @@ class PlayerQuitListener: Listener {
                 playerLeftGame(e.player)
                 plugin.gameStateManager.ingameState.isGameOver()
             }
-            GameStates.END_STATE -> {
-                playerLeftGame(e.player)
-            }
+            GameStates.END_STATE -> playerLeftGame(e.player)
         }
     }
 }

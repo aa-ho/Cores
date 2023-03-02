@@ -45,14 +45,10 @@ class TeamHelper {
     }
 
     fun assignPlayers() {
-        PLAYERS.forEach { (player, _) ->
-            if (!teamRedPlayers.contains(player) && !teamBluePlayers.contains(player)) {
-                val randomNumber = Math.random()
-                if (randomNumber < 0.5) {
-                    teamRedPlayers.add(player)
-                } else {
-                    teamBluePlayers.add(player)
-                }
+        PLAYERS.forEach { (p, _) ->
+            if (!teamRedPlayers.contains(p) && !teamBluePlayers.contains(p)) {
+                if (teamRedPlayers.size > teamBluePlayers.size) teamBluePlayers.add(p)
+                else teamRedPlayers.add(p)
             }
         }
     }
