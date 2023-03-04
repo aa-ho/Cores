@@ -1,5 +1,7 @@
 package cores
 
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.ProtocolManager
 import cores.api.*
 import cores.api.GlobalConst.CORES_COMMAND
 import cores.api.GlobalConst.DATE_TEXT_FORMAT
@@ -27,7 +29,7 @@ class Main : JavaPlugin() {
     companion object {
         lateinit var plugin: Main
         lateinit var configuration: Configuration
-        //lateinit var protocolManager: ProtocolManager
+        lateinit var protocolManager: ProtocolManager
     }
 
     val gameStateManager = GameStateManager()
@@ -41,7 +43,7 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         sendPluginDisEnabled(true, LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TEXT_FORMAT)))
-        //protocolManager = ProtocolLibrary.getProtocolManager()
+        protocolManager = ProtocolLibrary.getProtocolManager()
         configuration = Configuration()
         configuration.checkConfig()
         registerEvents()

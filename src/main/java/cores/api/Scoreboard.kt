@@ -67,7 +67,7 @@ class Scoreboard {
         objective.displaySlot = DisplaySlot.SIDEBAR
         objective.getScore(" ").score = 15
         objective.getScore("§fTimer:").score = 14
-        objective.getScore("§7${convertSeconds(plugin.gameStateManager.ingameState.ingameTimer.seconds)}").score =
+        objective.getScore("§3${convertSeconds(plugin.gameStateManager.ingameState.ingameTimer.seconds)}").score =
             13
         objective.getScore("").score = 12
         objective.getScore("${RED_COLORED}§8:").score = 11

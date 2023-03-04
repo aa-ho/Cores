@@ -3,6 +3,7 @@ package cores.countdown
 import cores.Main.Companion.plugin
 import cores.api.GlobalConst.END_COUNTDOWN_SECONDS
 import cores.api.ImportantFunctions
+import cores.api.ImportantFunctions.updateEndGameScoreboardAll
 import cores.api.Messages.serverStopInXSeconds
 import org.bukkit.Bukkit
 
@@ -15,6 +16,7 @@ class EndStateCountdown: Countdown() {
             isIdling = true
             taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
                 ImportantFunctions.setLevelAll(seconds)
+                updateEndGameScoreboardAll()
                 when(seconds) {
                     10, 5, 4, 3, 2, 1 -> {
                         serverStopInXSeconds(seconds)

@@ -248,6 +248,11 @@ object ImportantFunctions {
             plugin.scoreboard.updateInGameScoreboard(it)
         }
     }
+    fun updateEndGameScoreboardAll() {
+        Bukkit.getOnlinePlayers().forEach {
+            plugin.scoreboard.updateEndGameScoreboard(it)
+        }
+    }
 
     /*    fun createSmokeCircle(player: Player) {
             val particle = Particle.SMOKE_NORMAL
