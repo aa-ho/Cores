@@ -119,7 +119,7 @@ object Messages {
             if(it.name==p.name) {
                 sendPlayer(it, "Du hast den §b$beacon-$CORES_SINGULAR_COLORED§7 zerstört.")
             } else {
-                sendPlayer(it, "${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7 hat den §b$beacon-$CORES_SINGULAR_COLORED zerstört.")
+                sendPlayer(it, "${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7 hat den §b$beacon-$CORES_SINGULAR_COLORED§7 zerstört.")
             }
         }
     }

@@ -29,6 +29,7 @@ import cores.api.Team
 import cores.config.Paths.CONFIG_DATE_TEXT_FORMAT
 import cores.config.Paths.GAME_CONFIG
 import cores.config.Paths.GAME_CONFIG_YML
+import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -72,14 +73,47 @@ class Configuration {
         TEAM_SPAWN_RED_LOCATION = getter.getTeamSpawn(Team.RED) ?: TEAM_SPAWN_RED_LOCATION
         TEAM_SPAWN_BLUE_LOCATION = getter.getTeamSpawn(Team.BLUE) ?: TEAM_SPAWN_BLUE_LOCATION
         SPECTATOR_SPAWN_LOCATION = getter.getSpectatorSpawn()?: SPECTATOR_SPAWN_LOCATION
-        RED_CORE_FRONT = getter.getBeacon(Team.RED, Beacon.Front) ?: RED_CORE_FRONT
-        RED_CORE_BACK = getter.getBeacon(Team.RED, Beacon.Back) ?: RED_CORE_BACK
-        RED_CORE_LEFT = getter.getBeacon(Team.RED, Beacon.Left) ?: RED_CORE_LEFT
-        RED_CORE_RIGHT = getter.getBeacon(Team.RED, Beacon.Right) ?: RED_CORE_RIGHT
-        BLUE_CORE_FRONT = getter.getBeacon(Team.BLUE, Beacon.Front) ?: BLUE_CORE_FRONT
-        BLUE_CORE_BACK = getter.getBeacon(Team.BLUE, Beacon.Back) ?: BLUE_CORE_BACK
-        BLUE_CORE_LEFT = getter.getBeacon(Team.BLUE, Beacon.Left) ?: BLUE_CORE_LEFT
-        BLUE_CORE_RIGHT = getter.getBeacon(Team.BLUE, Beacon.Right) ?: BLUE_CORE_RIGHT
+        if(getter.getBeacon(Team.RED, Beacon.Front) != null) {
+            RED_CORE_FRONT = getter.getBeacon(Team.RED, Beacon.Front)!!
+            plugin.beaconHelper.addCoreToTeam(Team.RED, Beacon.Front)
+            RED_CORE_FRONT.block.type = Material.BEACON
+        }
+        if(getter.getBeacon(Team.RED, Beacon.Back) != null) {
+            RED_CORE_BACK = getter.getBeacon(Team.RED, Beacon.Back)!!
+            plugin.beaconHelper.addCoreToTeam(Team.RED, Beacon.Back)
+            RED_CORE_BACK.block.type = Material.BEACON
+        }
+        if(getter.getBeacon(Team.RED, Beacon.Left) != null) {
+            RED_CORE_LEFT = getter.getBeacon(Team.RED, Beacon.Left)!!
+            plugin.beaconHelper.addCoreToTeam(Team.RED, Beacon.Left)
+            RED_CORE_LEFT.block.type = Material.BEACON
+        }
+        if(getter.getBeacon(Team.RED, Beacon.Right) != null) {
+            RED_CORE_RIGHT = getter.getBeacon(Team.RED, Beacon.Right)!!
+            plugin.beaconHelper.addCoreToTeam(Team.RED, Beacon.Right)
+            RED_CORE_RIGHT.block.type = Material.BEACON
+        }
+
+        if(getter.getBeacon(Team.BLUE, Beacon.Front) != null) {
+            BLUE_CORE_FRONT = getter.getBeacon(Team.BLUE, Beacon.Front)!!
+            plugin.beaconHelper.addCoreToTeam(Team.BLUE, Beacon.Front)
+            BLUE_CORE_FRONT.block.type = Material.BEACON
+        }
+        if(getter.getBeacon(Team.BLUE, Beacon.Back) != null) {
+            BLUE_CORE_BACK = getter.getBeacon(Team.BLUE, Beacon.Back)!!
+            plugin.beaconHelper.addCoreToTeam(Team.BLUE, Beacon.Back)
+            BLUE_CORE_BACK.block.type = Material.BEACON
+        }
+        if(getter.getBeacon(Team.BLUE, Beacon.Left) != null) {
+            BLUE_CORE_LEFT = getter.getBeacon(Team.BLUE, Beacon.Left)!!
+            plugin.beaconHelper.addCoreToTeam(Team.BLUE, Beacon.Left)
+            BLUE_CORE_LEFT.block.type = Material.BEACON
+        }
+        if(getter.getBeacon(Team.BLUE, Beacon.Right) != null) {
+            BLUE_CORE_RIGHT = getter.getBeacon(Team.BLUE, Beacon.Right)!!
+            plugin.beaconHelper.addCoreToTeam(Team.BLUE, Beacon.Right)
+            BLUE_CORE_RIGHT.block.type = Material.BEACON
+        }
         sendConsole(CONFIG_LOADED)
     }
 

@@ -127,7 +127,7 @@ class CoresCommand : CommandExecutor {
 
     private fun setBeacon(beacon: String, team: Team, p: Player) {
         val blockPosition: Location =
-            p.location.block.getRelative(BlockFace.SELF).location
+            p.location.add(0.0, -1.0, 0.0).block.location
         when (beacon) {
             BEACON_FRONT -> {
                 configuration.setter.setBeacon(

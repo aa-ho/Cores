@@ -10,6 +10,7 @@ import cores.api.Messages
 import cores.api.Team
 import cores.countdown.IngameTimer
 import org.bukkit.Bukkit
+import org.bukkit.Bukkit.broadcastMessage
 
 class IngameState: GameState() {
 
@@ -38,15 +39,20 @@ class IngameState: GameState() {
     }
 
     fun isGameOver() {
-        if(plugin.teamHelper.teamSize(Team.BLUE) == 0 || plugin.teamHelper.teamSize(Team.RED) == 0) {
+        if(!plugin.beaconHelper.hasTeamCores(Team.RED) || !plugin.beaconHelper.hasTeamCores(Team.BLUE)) {
             plugin.gameStateManager.setGameState(GameStates.END_STATE)
         } else {
-            var count = 0
-            PLAYERS.forEach {
-                if(it.value) count++
-                if(count>1) return
+            broadcastMessage(plugin.beaconHelper.redCores.size.toString() + plugin.beaconHelper.blueCores.size.toString())
+            if(plugin.teamHelper.teamSize(Team.BLUE) == 0 || plugin.teamHelper.teamSize(Team.RED) == 0) {
+                plugin.gameStateManager.setGameState(GameStates.END_STATE)
+            } else {
+                var count = 0
+                PLAYERS.forEach {
+                    if(it.value) count++
+                    if(count>1) return
+                }
+                plugin.gameStateManager.setGameState(GameStates.END_STATE)
             }
-            plugin.gameStateManager.setGameState(GameStates.END_STATE)
         }
     }
 }

@@ -1,6 +1,6 @@
 package cores
 
-import cores.api.Cores
+import cores.api.BeaconHelper
 import cores.api.GlobalConst.CORES_COMMAND
 import cores.api.GlobalConst.DATE_TEXT_FORMAT
 import cores.api.Messages.sendPluginDisEnabled
@@ -35,7 +35,7 @@ class Main : JavaPlugin() {
         lateinit var cores: Cores*/
     }
     val gameStateManager = GameStateManager()
-    val cores = Cores()
+    val beaconHelper = BeaconHelper()
     val teamHelper = TeamHelper()
     val scoreboard = Scoreboard()
     val actionBarIdle = ActionBarIdle() //TODO Don't like that!
@@ -55,7 +55,6 @@ class Main : JavaPlugin() {
         registerEvents()
         getCommand(CORES_COMMAND)?.setExecutor(CoresCommand())
         teamHelper.buildTeamInventory()
-        cores.addAllCores()
         actionBarIdle.start()
         gameStateManager.startGameState(GameStates.LOBBY_STATE)
     }

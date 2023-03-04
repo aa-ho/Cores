@@ -56,10 +56,10 @@ class ConfigGetter {
             )
             Team.BLUE -> configuration.gameConfigYml.getLocation(
                 when (beacon) {
-                    Beacon.Front -> CONFIG_TEAM_CATEGORY_BLUE + BLUE_CORE_FRONT
-                    Beacon.Back -> CONFIG_TEAM_CATEGORY_BLUE + BLUE_CORE_BACK
-                    Beacon.Left -> CONFIG_TEAM_CATEGORY_BLUE + BLUE_CORE_LEFT
-                    Beacon.Right -> CONFIG_TEAM_CATEGORY_BLUE + BLUE_CORE_RIGHT
+                    Beacon.Front -> CONFIG_TEAM_CATEGORY_BLUE + CONFIG_BEACON_FRONT
+                    Beacon.Back -> CONFIG_TEAM_CATEGORY_BLUE + CONFIG_BEACON_BACK
+                    Beacon.Left -> CONFIG_TEAM_CATEGORY_BLUE + CONFIG_BEACON_LEFT
+                    Beacon.Right -> CONFIG_TEAM_CATEGORY_BLUE + CONFIG_BEACON_RIGHT
                 }
             )
         }
