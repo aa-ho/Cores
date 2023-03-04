@@ -13,10 +13,11 @@ object GlobalConst {
     var MIN_PLAYERS = 2
     var MAX_PLAYERS = 10
     var LOBBY_COUNTDOWN_SECONDS = 60 //TODO Eigentlich 60
-    var INGAME_TOTAL_SECONDS = 60 * 240
+    var INGAME_TOTAL_SECONDS = 300 //TODO Eigentlich 60*240
     var END_COUNTDOWN_SECONDS = 20
     var DATE_TEXT_FORMAT = "dd.MM.yyyy HH:mm"
     var LOBBY_COUNTDOWN_SKIP_SECONDS = 10
+    lateinit var WINNING_TEAM: Team
 
     val defaultLocation = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
 
@@ -69,14 +70,15 @@ object GlobalConst {
     val START_COMMAND = "start"
     val SET_COMMAND = "set"
     val SET_LOBBY_COMMAND = "lobby"
-    val SET_TEAM_SPAWN = "spawn"
-    val SET_SPECTATOR_SPAWN = "spectator"
+    val SET_TEAM_SPAWN_COMMAND = "spawn"
+    val SET_INGAME_TIMER_COMMAND = "timer"
+    val SET_SPECTATOR_SPAWN_COMMAND = "spectator"
     val RED_COMMAND = "red"
     val BLUE_COMMAND = "blue"
     val HELP_COMMAND = "help"
     val SET_BEACON_COMMAND = "beacon"
-    val BEACON_FRONT = "front"
-    val BEACON_BACK = "back"
-    val BEACON_LEFT = "left"
-    val BEACON_RIGHT = "right"
+    val BEACON_FRONT_COMMAND = "front"
+    val BEACON_BACK_COMMAND = "back"
+    val BEACON_LEFT_COMMAND = "left"
+    val BEACON_RIGHT_COMMAND = "right"
 }

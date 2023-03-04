@@ -1,10 +1,10 @@
 package cores.api
 
 import cores.Main.Companion.plugin
-import cores.api.GlobalConst.BEACON_BACK
-import cores.api.GlobalConst.BEACON_FRONT
-import cores.api.GlobalConst.BEACON_LEFT
-import cores.api.GlobalConst.BEACON_RIGHT
+import cores.api.GlobalConst.BEACON_BACK_COMMAND
+import cores.api.GlobalConst.BEACON_FRONT_COMMAND
+import cores.api.GlobalConst.BEACON_LEFT_COMMAND
+import cores.api.GlobalConst.BEACON_RIGHT_COMMAND
 import cores.api.GlobalConst.BLUE_COMMAND
 import cores.api.GlobalConst.CORES_COMMAND
 import cores.api.GlobalConst.HELP_COMMAND
@@ -13,7 +13,8 @@ import cores.api.GlobalConst.MAX_PLAYERS
 import cores.api.GlobalConst.RED_COMMAND
 import cores.api.GlobalConst.SET_BEACON_COMMAND
 import cores.api.GlobalConst.SET_COMMAND
-import cores.api.GlobalConst.SET_TEAM_SPAWN
+import cores.api.GlobalConst.SET_TEAM_SPAWN_COMMAND
+import cores.api.GlobalConst.WINNING_TEAM
 import cores.api.GlobalVars.PLAYERS
 import cores.gameStates.GameStates
 import org.bukkit.Bukkit
@@ -28,8 +29,10 @@ object Messages {
 
     val CORES_SINGULAR_COLORED = "§bCore"
 
-    var RED_COLORED = "§cRot"
-    var BLUE_COLORED = "§9Blau"
+    var RED_COLOR = "§c"
+    var BLUE_COLOR = "§9"
+    var RED_COLORED = "${RED_COLOR}Rot"
+    var BLUE_COLORED = "${BLUE_COLOR}Blau"
     val RANDOM_TEAM_COLORED = "§7Zufällig"
     val SPECTATOR_COLORED = "§7Zuschauer"
 
@@ -96,10 +99,10 @@ object Messages {
     }
 
     fun gameStartInXSecond(i: Int) {
-        broadcastMessage("Das Spiel startet in §b${if (i == 1) "einer" else i}§7 Sekunde${if (i == 1) "" else "n"}.")
+        broadcastMessage("Das Spiel startet in §3${if (i == 1) "einer" else i}§7 Sekunde${if (i == 1) "" else "n"}.")
     }
 
-    fun gameStartInXSecondTitle(i: Int): String = "§b$i"
+    fun gameStartInXSecondTitle(i: Int): String = "§3$i"
 
     fun serverStopInXSeconds(i: Int) {
         broadcastMessage("Der Server stoppt in §b${if (i == 1) "einer" else i}§7 Sekunde${if (i == 1) "" else "n"}.")
@@ -156,7 +159,7 @@ object Messages {
     }
 
     fun sendMissingPermission(p: Player, permission: String) {
-        sendPlayer(p, permission)
+        sendPlayer(p, "Fehlende Berechtigung: §3$permission§7.")
     }
 
     fun sendPlayerOnlyLobbyStateStart(p: Player) {
@@ -197,13 +200,13 @@ object Messages {
     }
 
     fun sendPlayerTeamSpawnSetHelp(p: Player) {
-        sendPlayerCommandHelper(p, "$SET_COMMAND $SET_TEAM_SPAWN $RED_COMMAND/$BLUE_COMMAND")
+        sendPlayerCommandHelper(p, "$SET_COMMAND $SET_TEAM_SPAWN_COMMAND $RED_COMMAND/$BLUE_COMMAND")
     }
 
     fun sendPlayerSetCoreLocHelp(p: Player) {
         sendPlayerCommandHelper(
             p,
-            "$SET_COMMAND $SET_BEACON_COMMAND $RED_COMMAND/$BLUE_COMMAND $BEACON_FRONT/$BEACON_BACK/$BEACON_LEFT/$BEACON_RIGHT"
+            "$SET_COMMAND $SET_BEACON_COMMAND $RED_COMMAND/$BLUE_COMMAND $BEACON_FRONT_COMMAND/$BEACON_BACK_COMMAND/$BEACON_LEFT_COMMAND/$BEACON_RIGHT_COMMAND"
         )
     }
 
@@ -267,5 +270,9 @@ object Messages {
             if(it.name==p.name) sendPlayer(it, "Du bist gestorben.")
             else sendPlayer(it, "$playerColored§7 ist gestorben.")
         }
+    }
+    fun setTeamHasWon(team: Team) {
+        WINNING_TEAM = team
+        broadcastMessage("Team ${WINNING_TEAM.colorDisplayed}${WINNING_TEAM.name}§7 hat das Spiel gewonnen.")
     }
 }

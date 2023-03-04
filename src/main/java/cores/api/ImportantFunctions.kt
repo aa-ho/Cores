@@ -19,19 +19,20 @@ import cores.api.GlobalConst.woodItems
 import cores.api.GlobalVars.PLAYERS
 import cores.api.Messages.BLUE_COLORED
 import cores.api.Messages.KICK_LEAVE_ITEM
-import cores.api.Messages.KICK_RESTART
 import cores.api.Messages.RANDOM_TEAM_COLORED
 import cores.api.Messages.RED_COLORED
 import cores.api.Messages.SPECTATOR_COLORED
+import cores.api.Messages.sendCoreDestroyed
 import cores.gameStates.GameStates
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
-import org.bukkit.Location
-import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.LeatherArmorMeta
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 object ImportantFunctions {
 
@@ -57,11 +58,23 @@ object ImportantFunctions {
         p.level = 0
         p.health = 20.0
         p.foodLevel = 20
-        p.inventory.heldItemSlot
+        p.inventory.heldItemSlot = 0
         p.inventory.clear()
         p.openInventory.close()
-        p.activePotionEffects.forEach{p.removePotionEffect(it.type)}
+        p.activePotionEffects.forEach { p.removePotionEffect(it.type) }
         //TODO respawn...
+    }
+
+    fun onCoreDestroyed(team: Team, beacon: Beacon, p: Player) {
+        playSoundForAll(Sound.ENTITY_WITHER_DEATH)
+        sendCoreDestroyed(p, beacon)
+        sendTitleForAll(
+            "${team.colorDisplayed}$beacon-Beacon",
+            5,
+            80,
+            5,
+            "§7wurde von ${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7zerstört"
+        )
     }
 
     fun resetAllPlayers() {
@@ -149,6 +162,7 @@ object ImportantFunctions {
     fun kickPlayerLeave(p: Player) {
         p.kickPlayer(KICK_LEAVE_ITEM)
     }
+
     fun kickAll(message: String) {
         Bukkit.getOnlinePlayers().forEach {
             it.kickPlayer(message)
@@ -167,7 +181,47 @@ object ImportantFunctions {
         }
     }
 
-    fun setIngamePlayerItems(p: Player) {
+    fun equipPlayerWithDarkRedOrBlueLeatherArmor(player: Player, team: Team) {
+        val color = if (team == Team.RED) Color.fromRGB(102, 0, 0) else Color.fromRGB(0, 0, 102)
+        val helmet = ItemStack(Material.LEATHER_HELMET)
+        val helmetMeta = helmet.itemMeta as LeatherArmorMeta
+        helmetMeta.setColor(color)
+        helmet.itemMeta = helmetMeta
+
+        val chestplate = ItemStack(Material.LEATHER_CHESTPLATE)
+        val chestplateMeta = chestplate.itemMeta as LeatherArmorMeta
+        chestplateMeta.setColor(color)
+        chestplate.itemMeta = chestplateMeta
+
+        val leggings = ItemStack(Material.LEATHER_LEGGINGS)
+        val leggingsMeta = leggings.itemMeta as LeatherArmorMeta
+        leggingsMeta.setColor(color)
+        leggings.itemMeta = leggingsMeta
+
+        val boots = ItemStack(Material.LEATHER_BOOTS)
+        val bootsMeta = boots.itemMeta as LeatherArmorMeta
+        bootsMeta.setColor(color)
+        boots.itemMeta = bootsMeta
+
+        player.inventory.armorContents = arrayOf(boots, leggings, chestplate, helmet)
+    }
+    fun giveSlowMiningToTeam(team: Team) {
+        val players = when(team) {
+            Team.RED -> plugin.teamHelper.teamRedPlayers
+            Team.BLUE -> plugin.teamHelper.teamBluePlayers
+        }
+        val effect = PotionEffect(
+            PotionEffectType.SLOW_DIGGING,
+            20,
+            1,
+            false,
+            false,
+            false
+        )
+        players.forEach { it.addPotionEffect(effect) }
+    }
+
+    fun setInGamePlayerItems(p: Player) {
         p.inventory.setItem(0, swordItem)
         p.inventory.setItem(1, bowItem)
         p.inventory.setItem(2, goldenAppleItems)
@@ -176,6 +230,7 @@ object ImportantFunctions {
         p.inventory.setItem(5, woodItems)
         p.inventory.setItem(6, steakItems)
         p.inventory.setItem(8, arrowItems)
+        equipPlayerWithDarkRedOrBlueLeatherArmor(p, plugin.teamHelper.getPlayerTeam(p))
     }
 
     fun setSpectatorPlayerItems(p: Player) {
@@ -218,7 +273,7 @@ object ImportantFunctions {
 
     fun setIngameItemsForPlayers() {
         PLAYERS.forEach {
-            setIngamePlayerItems(it.key)
+            setInGamePlayerItems(it.key)
         }
     }
 
@@ -228,6 +283,39 @@ object ImportantFunctions {
 
     fun sendPlayerKillSound(p: Player) {
         p.playSound(p.location, Sound.ITEM_HONEY_BOTTLE_DRINK, 2.0F, 2.0F)
+    }
+
+    fun alarmForTeam(team: Team, beacon: Beacon) {
+        if (team == Team.RED) {
+            plugin.teamHelper.teamRedPlayers.forEach {
+                it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 3.0F, 3.0F)
+                it.sendTitle("${team.colorDisplayed}$beacon-Beacon", "§7in Gefahr", 0, 10, 0)
+            }
+        } else {
+            plugin.teamHelper.teamBluePlayers.forEach {
+                it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 3.0F, 3.0F)
+                it.sendTitle("${team.colorDisplayed}$beacon-Beacon", "§7in Gefahr", 0, 10, 0)
+            }
+        }
+    }
+
+    /*    fun convertSecondsToHMS(seconds: Int): String {
+            val hours = seconds / 3600
+            val minutes = (seconds % 3600) / 60
+            val sec = seconds % 60
+            return if (hours > 0) "$hours:${if (minutes > 0) "$minutes:" else "00"}${if (sec > 0) sec else "00"}"
+            else if (minutes > 0) "$minutes:${if (sec > 0) sec else "00"}"
+            else sec.toString()
+        }*/
+    fun convertSeconds(seconds: Int): String {
+        val hours = seconds / 3600
+        val minutes = (seconds % 3600) / 60
+
+        return if (hours == 0) {
+            String.format("%02d:%02d", minutes, seconds % 60)
+        } else {
+            String.format("%02d:%02d:%02d", hours, minutes, seconds % 60)
+        }
     }
 
     fun setPlayerTeamActionBar(p: Player) {

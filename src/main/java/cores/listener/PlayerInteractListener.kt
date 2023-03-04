@@ -3,14 +3,18 @@ package cores.listener
 import cores.Main
 import cores.api.GlobalConst
 import cores.api.GlobalVars
+import cores.api.GlobalVars.PLAYERS
 import cores.api.ImportantFunctions
 import cores.gameStates.GameStates
 import org.bukkit.Bukkit
+import org.bukkit.Bukkit.broadcastMessage
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 class PlayerInteractListener : Listener {
 
@@ -47,13 +51,14 @@ class PlayerInteractListener : Listener {
                 }
             }
             GameStates.INGAME_STATE -> {
-                if (!GlobalVars.PLAYERS.containsKey(e.player)) {
+                if (!PLAYERS.containsKey(e.player)) {
                     e.isCancelled = true
                     if (itemCoolDown.contains(e.player.name)) return
                     addPlayerToItemCoolDown(e.player.name)
                     //TODO Spectator stuff!
-                } else if (e.action == Action.RIGHT_CLICK_BLOCK && e.clickedBlock?.type == Material.BEACON) e.isCancelled =
-                    true
+                } else if (e.clickedBlock?.type == Material.BEACON) {
+                    if (e.action == Action.RIGHT_CLICK_BLOCK) e.isCancelled = true
+                }
             }
             GameStates.END_STATE -> {
                 e.isCancelled = true

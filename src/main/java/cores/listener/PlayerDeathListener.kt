@@ -27,8 +27,6 @@ class PlayerDeathListener: Listener {
                         when (e.player.lastDamageCause) {
                             //TODO...
                         }
-                        Bukkit.broadcastMessage(e.player.lastDamageCause.toString())
-                        Bukkit.broadcastMessage(e.player.lastDamageCause?.cause.toString())
                         Messages.sendPlayerDied(e.player)
                     }
                     //e.isCancelled = true //TODO???

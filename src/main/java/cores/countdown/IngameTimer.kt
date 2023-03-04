@@ -8,10 +8,11 @@ import cores.api.Messages.gameEndsInXMinutes
 import cores.api.Messages.gameEndsInXSeconds
 import cores.api.Messages.halftimeBroadcast
 import org.bukkit.Bukkit
+import org.bukkit.Bukkit.broadcastMessage
 
 class IngameTimer : Countdown() {
 
-    private var seconds = INGAME_TOTAL_SECONDS
+    var seconds = 0
 
     override fun start() {
         if (!isIdling) {
@@ -27,18 +28,18 @@ class IngameTimer : Countdown() {
                         gameEndsInXMinutes(INGAME_TOTAL_SECONDS/60/4)
                         playTimeReminderSoundToAll()
                     }
-                    1200, 600, 300, 240, 180, 120 -> {
+                    INGAME_TOTAL_SECONDS-1200, INGAME_TOTAL_SECONDS-600, INGAME_TOTAL_SECONDS-300, INGAME_TOTAL_SECONDS-240, INGAME_TOTAL_SECONDS-180, INGAME_TOTAL_SECONDS-120 -> {
                         gameEndsInXMinutes(seconds/60)
                         playTimeReminderSoundToAll()
                     }
-                    60, 30, 20, 10, 5, 4, 3, 2, 1 -> {
+                    INGAME_TOTAL_SECONDS-60, INGAME_TOTAL_SECONDS-30, INGAME_TOTAL_SECONDS-20, INGAME_TOTAL_SECONDS-10, INGAME_TOTAL_SECONDS-5, INGAME_TOTAL_SECONDS-4, INGAME_TOTAL_SECONDS-3, INGAME_TOTAL_SECONDS-2, INGAME_TOTAL_SECONDS-1 -> {
                         gameEndsInXSeconds(seconds)
                     }
-                    0 -> {
+                    INGAME_TOTAL_SECONDS -> {
                         stop()
                     }
                 }
-                seconds--
+                seconds++
             }, 0, 20)
         }
     }

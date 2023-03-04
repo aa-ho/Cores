@@ -1,14 +1,11 @@
 package cores
 
-import cores.api.BeaconHelper
+import cores.api.*
 import cores.api.GlobalConst.CORES_COMMAND
 import cores.api.GlobalConst.DATE_TEXT_FORMAT
 import cores.api.ImportantFunctions.kickAll
 import cores.api.Messages.KICK_RESTART
 import cores.api.Messages.sendPluginDisEnabled
-import cores.api.RankHelper
-import cores.api.Scoreboard
-import cores.api.TeamHelper
 import cores.commands.CoresCommand
 import cores.config.Configuration
 import cores.countdown.ActionBarIdle
@@ -39,6 +36,7 @@ class Main : JavaPlugin() {
     val scoreboard = Scoreboard()
     val actionBarIdle = ActionBarIdle() //TODO Don't like that!
     val rankHelper = RankHelper()
+    val stats = Stats()
 
 
     override fun onEnable() {
@@ -69,6 +67,7 @@ class Main : JavaPlugin() {
         registerEvent(PlayerJoinListener())
         registerEvent(PlayerLoginListener())
         registerEvent(PlayerQuitListener())
+        registerEvent(ServerListPingListener())
     }
 
     private fun registerEvent(listener: Listener) {

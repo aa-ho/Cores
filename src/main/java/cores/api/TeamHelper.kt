@@ -22,8 +22,8 @@ import org.bukkit.entity.Player
 
 class TeamHelper {
 
-    private val teamRedPlayers = ArrayList<Player>()
-    private val teamBluePlayers = ArrayList<Player>()
+    val teamRedPlayers = ArrayList<Player>()
+    val teamBluePlayers = ArrayList<Player>()
 
     private fun isTeamFull(teams: Team): Boolean {
         return if (teams == Team.RED) teamRedPlayers.size >= MAX_PLAYERS / 2

@@ -28,7 +28,7 @@ class LobbyCountdown: Countdown() {
                 when (seconds) {
                     60, 30, 20, 10 -> {
                         ImportantFunctions.playSoundForAll(LOBBY_COUNTDOWN_SOUND)
-                        ImportantFunctions.sendTitleForAll(Messages.gameStartInXSecondTitle(seconds), 0, 20, 0)
+                        ImportantFunctions.sendTitleForAll("", 0, 20, 0, Messages.gameStartInXSecondTitle(seconds))
                         gameStartInXSecond(seconds)
                     }
                     8 -> {
@@ -36,7 +36,7 @@ class LobbyCountdown: Countdown() {
                     }
                     5, 4, 3, 2, 1 -> {
                         ImportantFunctions.playSoundForAll(LOBBY_COUNTDOWN_SOUND)
-                        ImportantFunctions.sendTitleForAll(Messages.gameStartInXSecondTitle(seconds), 0, 20, 0)
+                        ImportantFunctions.sendTitleForAll(Messages.gameStartInXSecondTitle(seconds), 0, 20, 0, "")
 
                     }
                     0 -> {

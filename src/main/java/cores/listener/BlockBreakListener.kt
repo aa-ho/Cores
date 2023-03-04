@@ -11,14 +11,13 @@ import cores.api.GlobalConst.RED_CORE_FRONT
 import cores.api.GlobalConst.RED_CORE_LEFT
 import cores.api.GlobalConst.RED_CORE_RIGHT
 import cores.api.GlobalVars.PLAYERS
+import cores.api.ImportantFunctions.onCoreDestroyed
 import cores.api.ImportantFunctions.sendPlayerFailedSound
 import cores.api.Messages.PREFIX_COLORED
-import cores.api.Messages.sendCoreDestroyed
 import cores.api.Messages.sendPlayer
 import cores.api.Messages.sendPlayerCannotDestroyOwnBeacon
 import cores.api.Team
 import cores.gameStates.GameStates
-import org.bukkit.Bukkit.broadcastMessage
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -44,7 +43,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Front)
-                                            sendCoreDestroyed(e.player, Beacon.Front)
+                                            onCoreDestroyed(Team.RED, Beacon.Front, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
@@ -54,7 +53,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Back)
-                                            sendCoreDestroyed(e.player, Beacon.Back)
+                                            onCoreDestroyed(Team.RED, Beacon.Back, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
@@ -64,7 +63,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Left)
-                                            sendCoreDestroyed(e.player, Beacon.Left)
+                                            onCoreDestroyed(Team.RED, Beacon.Left, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
@@ -74,7 +73,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Right)
-                                            sendCoreDestroyed(e.player, Beacon.Right)
+                                            onCoreDestroyed(Team.RED, Beacon.Right, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
@@ -84,7 +83,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Front)
-                                            sendCoreDestroyed(e.player, Beacon.Front)
+                                            onCoreDestroyed(Team.BLUE, Beacon.Front, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
@@ -94,7 +93,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Back)
-                                            sendCoreDestroyed(e.player, Beacon.Back)
+                                            onCoreDestroyed(Team.BLUE, Beacon.Back, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
@@ -104,7 +103,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Left)
-                                            sendCoreDestroyed(e.player, Beacon.Left)
+                                            onCoreDestroyed(Team.BLUE, Beacon.Left, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
@@ -114,7 +113,7 @@ class BlockBreakListener : Listener {
                                             sendPlayerFailedSound(e.player)
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Right)
-                                            sendCoreDestroyed(e.player, Beacon.Right)
+                                            onCoreDestroyed(Team.BLUE, Beacon.Right, e.player)
                                             e.block.type = Material.AIR
                                         }
                                     }
