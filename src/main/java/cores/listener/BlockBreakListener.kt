@@ -35,7 +35,6 @@ class BlockBreakListener : Listener {
                     if (e.block.type == Material.BEACON) {
                         //TODO beacon entfernt...
                         e.isCancelled = true
-
                         when (e.block.location) {
                             RED_CORE_FRONT, RED_CORE_BACK, RED_CORE_LEFT, RED_CORE_RIGHT, BLUE_CORE_FRONT, BLUE_CORE_BACK, BLUE_CORE_LEFT, BLUE_CORE_RIGHT -> {
                                 when (e.block.location) {
@@ -46,6 +45,7 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Front)
                                             sendCoreDestroyed(e.player, Beacon.Front)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                     RED_CORE_BACK -> {
@@ -55,6 +55,7 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Back)
                                             sendCoreDestroyed(e.player, Beacon.Back)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                     RED_CORE_LEFT -> {
@@ -64,6 +65,7 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Left)
                                             sendCoreDestroyed(e.player, Beacon.Left)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                     RED_CORE_RIGHT -> {
@@ -73,6 +75,7 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.RED, Beacon.Right)
                                             sendCoreDestroyed(e.player, Beacon.Right)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                     BLUE_CORE_FRONT -> {
@@ -82,6 +85,7 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Front)
                                             sendCoreDestroyed(e.player, Beacon.Front)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                     BLUE_CORE_BACK -> {
@@ -91,6 +95,7 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Back)
                                             sendCoreDestroyed(e.player, Beacon.Back)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                     BLUE_CORE_LEFT -> {
@@ -100,6 +105,7 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Left)
                                             sendCoreDestroyed(e.player, Beacon.Left)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                     BLUE_CORE_RIGHT -> {
@@ -109,10 +115,10 @@ class BlockBreakListener : Listener {
                                         } else {
                                             plugin.beaconHelper.removeCoreFromTeam(Team.BLUE, Beacon.Right)
                                             sendCoreDestroyed(e.player, Beacon.Right)
+                                            e.block.type = Material.AIR
                                         }
                                     }
                                 }
-                                e.block.type = Material.AIR
                             }
                         }
                         sendPlayer(e.player, PREFIX_COLORED)

@@ -40,6 +40,7 @@ object Messages {
     val GAME_FULL = "Das Spiel ist voll."
     val KICK_FROM_VIP = "Ein VIP hat die volle Runde betreten."
     val KICK_LEAVE_ITEM = "Du hast das Spiel verlassen."
+    val KICK_RESTART = "Restart"
 
     val CONFIG_COLORED = "§bConfig"
     val CHECK_CONFIG_FOR_CONTENT = "§eDie $CONFIG_COLORED§e wird auf Inhalte geprüft..."
@@ -150,6 +151,9 @@ object Messages {
     fun sendDoNotSpamCommand(p: Player) {
         sendPlayer(p, "Bitte spamme nicht.")
     }
+    fun sendDoNotSpamChat(p: Player) {
+        sendPlayer(p, "Bitte spamme nicht in den Chat.")
+    }
 
     fun sendMissingPermission(p: Player, permission: String) {
         sendPlayer(p, permission)
@@ -247,8 +251,8 @@ object Messages {
         }
     }
     fun sendPlayerKilledByPlayer(player: Player, killer: Player) {
-        val playerColored = "${plugin.rankHelper.getPlayersRankColor(player)}${player.name}"
-        val killerColored = "${plugin.rankHelper.getPlayersRankColor(killer)}${killer.name}"
+        val playerColored = "${plugin.teamHelper.getPlayerTeam(player).colorDisplayed}${player.name}"
+        val killerColored = "${plugin.teamHelper.getPlayerTeam(killer).colorDisplayed}${killer.name}"
         Bukkit.getOnlinePlayers().forEach {
             when (it.name) {
                 player.name -> sendPlayer(it, "Du wurdest von $killerColored§7 getötet.")
@@ -258,21 +262,10 @@ object Messages {
         }
     }
     fun sendPlayerDied(p: Player) {
-        val playerColored = "${plugin.rankHelper.getPlayersRankColor(p)}${p.name}"
+        val playerColored = "${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}"
         Bukkit.getOnlinePlayers().forEach {
             if(it.name==p.name) sendPlayer(it, "Du bist gestorben.")
             else sendPlayer(it, "$playerColored§7 ist gestorben.")
-        }
-    }
-    //TODO Core....
-    fun sendPlayerCoreDestroyed(p: Player, ) {
-        val playerColored = "${plugin.rankHelper.getPlayersRankColor(p)}${p.name}"
-        Bukkit.getOnlinePlayers().forEach {
-            if(it.name == p.name) {
-                //TODO DO stuff...
-            } else {
-                //TODO DO stuff...
-            }
         }
     }
 }

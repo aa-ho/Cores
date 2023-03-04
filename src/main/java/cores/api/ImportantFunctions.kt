@@ -19,6 +19,7 @@ import cores.api.GlobalConst.woodItems
 import cores.api.GlobalVars.PLAYERS
 import cores.api.Messages.BLUE_COLORED
 import cores.api.Messages.KICK_LEAVE_ITEM
+import cores.api.Messages.KICK_RESTART
 import cores.api.Messages.RANDOM_TEAM_COLORED
 import cores.api.Messages.RED_COLORED
 import cores.api.Messages.SPECTATOR_COLORED
@@ -59,6 +60,8 @@ object ImportantFunctions {
         p.inventory.heldItemSlot
         p.inventory.clear()
         p.openInventory.close()
+        p.activePotionEffects.forEach{p.removePotionEffect(it.type)}
+        //TODO respawn...
     }
 
     fun resetAllPlayers() {
@@ -145,6 +148,11 @@ object ImportantFunctions {
 
     fun kickPlayerLeave(p: Player) {
         p.kickPlayer(KICK_LEAVE_ITEM)
+    }
+    fun kickAll(message: String) {
+        Bukkit.getOnlinePlayers().forEach {
+            it.kickPlayer(message)
+        }
     }
 
     fun setGameModeAll(gameMode: GameMode) {

@@ -3,6 +3,8 @@ package cores
 import cores.api.BeaconHelper
 import cores.api.GlobalConst.CORES_COMMAND
 import cores.api.GlobalConst.DATE_TEXT_FORMAT
+import cores.api.ImportantFunctions.kickAll
+import cores.api.Messages.KICK_RESTART
 import cores.api.Messages.sendPluginDisEnabled
 import cores.api.RankHelper
 import cores.api.Scoreboard
@@ -21,19 +23,16 @@ import java.time.format.DateTimeFormatter
 
 
 class Main : JavaPlugin() {
-
     init {
         plugin = this
-
     }
+
     companion object {
         lateinit var plugin: Main
         lateinit var configuration: Configuration
         //lateinit var protocolManager: ProtocolManager
-/*        lateinit var gameStateManager: GameStateManager
-        lateinit var teamHelper: TeamHelper
-        lateinit var cores: Cores*/
     }
+
     val gameStateManager = GameStateManager()
     val beaconHelper = BeaconHelper()
     val teamHelper = TeamHelper()
@@ -44,13 +43,8 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         sendPluginDisEnabled(true, LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TEXT_FORMAT)))
-
-        //plugin = this
         //protocolManager = ProtocolLibrary.getProtocolManager()
         configuration = Configuration()
-/*        gameStateManager = GameStateManager()
-        teamHelper = TeamHelper()
-        cores = Cores()*/
         configuration.checkConfig()
         registerEvents()
         getCommand(CORES_COMMAND)?.setExecutor(CoresCommand())
@@ -61,23 +55,23 @@ class Main : JavaPlugin() {
 
     override fun onDisable() {
         sendPluginDisEnabled(false, LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TEXT_FORMAT)))
-        Bukkit.getOnlinePlayers().forEach {
-            it.kickPlayer("Hurensohn")
-        }
+        kickAll(KICK_RESTART)
     }
 
     private fun registerEvents() {
-        registerEvent(PlayerLoginListener())
-        registerEvent(PlayerJoinListener())
-        registerEvent(PlayerQuitListener())
-        registerEvent(EntityDamageByEntityListener())
         registerEvent(BlockBreakListener())
+        registerEvent(EntityDamageByEntityListener())
+        registerEvent(InventoryClickListener())
         registerEvent(OtherListeners())
+        registerEvent(PlayerChatEvent())
+        registerEvent(PlayerDeathListener())
+        registerEvent(PlayerInteractListener())
+        registerEvent(PlayerJoinListener())
+        registerEvent(PlayerLoginListener())
+        registerEvent(PlayerQuitListener())
     }
 
     private fun registerEvent(listener: Listener) {
         Bukkit.getPluginManager().registerEvents(listener, this)
     }
-
-
 }

@@ -43,6 +43,7 @@ class PlayerJoinListener : Listener {
                 pperms!!.setPermission(Permission.DEFAULT.permission, true)
                 plugin.rankHelper.setPlayersRank(e.player)
                 resetPlayer(e.player)
+                //e.player.isCollidable = false Not working?
                 e.player.teleport(LOBBY_SPAWN_LOCATION)
                 setLobbyInventoryAndPrivileges(e.player)
                 plugin.teamHelper.reopenTeamInventoryAll()
