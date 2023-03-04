@@ -9,7 +9,7 @@ class RankHelper {
         registerTeams()
     }
     private val playerRanks = HashMap<String, Rank>()
-    fun getPlayersRank(p: Player): Rank? = playerRanks[p.name]
+    private fun getPlayersRank(p: Player): Rank? = playerRanks[p.name]
     fun setPlayersRank(p: Player) {
         for(rank in Rank.values()) {
             if(p.hasPermission(rank.permission.permission)) {

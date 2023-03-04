@@ -37,10 +37,11 @@ object GlobalConst {
     var BLUE_CORE_RIGHT = defaultLocation
 
     val swordItem = ItemBuilder(Material.STONE_SWORD).build()
-    val iron_pickage = ItemBuilder(Material.IRON_PICKAXE).build()
-    val iron_axe = ItemBuilder(Material.IRON_AXE).build()
+    val ironPickage = ItemBuilder(Material.IRON_PICKAXE).build()
+    val ironAxe = ItemBuilder(Material.IRON_AXE).build()
     val bowItem = ItemBuilder(Material.BOW).build()
-    val goldenAppleItem = ItemBuilder(Material.GOLDEN_APPLE).build()
+    val goldenAppleItems = ItemBuilder(Material.GOLDEN_APPLE).build()
+    val steakItems = ItemBuilder(Material.COOKED_BEEF).setAmount(32).build()
     val woodItems = ItemBuilder(Material.SPRUCE_LOG).setAmount(64).build()
     val arrowItems = ItemBuilder(Material.ARROW).setAmount(16).build()
 

@@ -2,10 +2,8 @@ package cores.gameStates
 
 import cores.Main.Companion.plugin
 import cores.api.GlobalVars.PLAYERS
-import cores.api.ImportantFunctions.clearAll
-import cores.api.ImportantFunctions.closeAllInventories
-import cores.api.ImportantFunctions.setGameModeAll
-import cores.api.ImportantFunctions.setIngameItemsAll
+import cores.api.ImportantFunctions.resetAllPlayers
+import cores.api.ImportantFunctions.setIngameItemsForPlayers
 import cores.api.ImportantFunctions.setPlayersSurvival
 import cores.api.ImportantFunctions.teleportAllTeams
 import cores.api.Messages
@@ -22,12 +20,10 @@ class IngameState: GameState() {
         if(!isRunning) {
             isRunning = true
             plugin.teamHelper.assignPlayers()
-            clearAll()
             setPlayersSurvival()
             teleportAllTeams()
-            setIngameItemsAll()
-            closeAllInventories()
-            plugin.teamHelper.buildTeamInventory()
+            resetAllPlayers()
+            setIngameItemsForPlayers()
             ingameTimer.start()
         }
     }
@@ -47,10 +43,8 @@ class IngameState: GameState() {
         } else {
             var count = 0
             PLAYERS.forEach {
-                if(it.value) {
-                    count++
-                    if(count>1) return
-                }
+                if(it.value) count++
+                if(count>1) return
             }
             plugin.gameStateManager.setGameState(GameStates.END_STATE)
         }

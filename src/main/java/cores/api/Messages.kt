@@ -26,6 +26,8 @@ object Messages {
     var CHAT_EXTENSION = " §8» §7"
     var PREFIX_CHAT = "$PREFIX_COLORED$CHAT_EXTENSION"
 
+    val CORES_SINGULAR_COLORED = "§bCore"
+
     var RED_COLORED = "§cRot"
     var BLUE_COLORED = "§9Blau"
     val RANDOM_TEAM_COLORED = "§7Zufällig"
@@ -78,6 +80,11 @@ object Messages {
     fun sendPlayer(p: Player, msg: String, prefix: Boolean = true) {
         p.sendMessage("${if (prefix) PREFIX_CHAT else ""}$msg")
     }
+    fun sendSpectators(message: String) {
+        Bukkit.getOnlinePlayers().forEach {
+            if(!PLAYERS.containsKey(it)) sendPlayer(it, message)
+        }
+    }
 
     private fun broadcastMessage(msg: String, prefix: Boolean = true) {
         Bukkit.broadcastMessage("${if (prefix) PREFIX_CHAT else ""}$msg")
@@ -97,22 +104,35 @@ object Messages {
         broadcastMessage("Der Server stoppt in §b${if (i == 1) "einer" else i}§7 Sekunde${if (i == 1) "" else "n"}.")
     }
     fun gameTitle(): String = PREFIX_COLORED
-    fun sendPlayerJoinedGame(p: Player) {
+    fun broadcastPlayerJoinedGame(p: Player) {
         broadcastMessage("${plugin.rankHelper.getPlayersRankColor(p)}${p.name}§7 hat das Spiel betreten (§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7).")
     }
 
-    fun playerRejoinedGame(p: Player) {
-        broadcastMessage("${p.name}§7 hat das Spiel wieder betreten.")
+    fun broadcastPlayerRejoinedGame(p: Player) {
+        broadcastMessage("${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7 hat das Spiel wieder betreten.")
+    }
+    fun sendPlayerCannotDestroyOwnBeacon(p: Player) {
+        sendPlayer(p, "Du kannst deinen eigenen $CORES_SINGULAR_COLORED§7 nicht zerstören.")
+    }
+    fun sendCoreDestroyed(p: Player, beacon: Beacon) {
+        Bukkit.getOnlinePlayers().forEach {
+            if(it.name==p.name) {
+                sendPlayer(it, "Du hast den §b$beacon-$CORES_SINGULAR_COLORED§7 zerstört.")
+            } else {
+                sendPlayer(it, "${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7 hat den §b$beacon-$CORES_SINGULAR_COLORED zerstört.")
+            }
+        }
     }
 
+
     fun playerLeftGame(p: Player) {
-        broadcastMessage(
-            "${p.name}§7 hat das Spiel verlassen ${
-                if (plugin.gameStateManager.getCurrentGameState() == GameStates.END_STATE) ""
-                else if (plugin.gameStateManager.getCurrentGameState() == GameStates.LOBBY_STATE) "(§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7)"
-                else "(rejoin)"
-            }."
-        )
+        when(plugin.gameStateManager.getCurrentGameState()) {
+            GameStates.LOBBY_STATE -> broadcastMessage("${plugin.rankHelper.getPlayersRankColor(p)}${p.name}§7 hat das Spiel verlassen (§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7).")
+            GameStates.INGAME_STATE -> {
+                if(PLAYERS.containsKey(p)) broadcastMessage("${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}§7 hat das Spiel verlassen (rejoin).")
+            }
+            GameStates.END_STATE -> broadcastMessage("${plugin.rankHelper.getPlayersRankColor(p)}${p.name}§7 hat das Spiel verlassen.")
+        }
     }
 
     fun halftimeBroadcast() {

@@ -10,9 +10,10 @@ import cores.api.GlobalConst.TEAM_SPAWN_BLUE_LOCATION
 import cores.api.GlobalConst.TEAM_SPAWN_RED_LOCATION
 import cores.api.GlobalConst.arrowItems
 import cores.api.GlobalConst.bowItem
-import cores.api.GlobalConst.goldenAppleItem
-import cores.api.GlobalConst.iron_axe
-import cores.api.GlobalConst.iron_pickage
+import cores.api.GlobalConst.goldenAppleItems
+import cores.api.GlobalConst.ironAxe
+import cores.api.GlobalConst.ironPickage
+import cores.api.GlobalConst.steakItems
 import cores.api.GlobalConst.swordItem
 import cores.api.GlobalConst.woodItems
 import cores.api.GlobalVars.PLAYERS
@@ -51,6 +52,21 @@ object ImportantFunctions {
         }
     }
 
+    fun resetPlayer(p: Player) {
+        p.level = 0
+        p.health = 20.0
+        p.foodLevel = 20
+        p.inventory.heldItemSlot
+        p.inventory.clear()
+        p.openInventory.close()
+    }
+
+    fun resetAllPlayers() {
+        Bukkit.getOnlinePlayers().forEach {
+            resetPlayer(it)
+        }
+    }
+
     fun playSoundLevelSuccess(p: Player) {
         p.playSound(p.location, Sound.ENTITY_VILLAGER_YES, 1.0F, 1.0F)
     }
@@ -69,9 +85,13 @@ object ImportantFunctions {
         Bukkit.getOnlinePlayers().forEach {
             if (!PLAYERS.containsKey(it))
                 it.teleport(SPECTATOR_SPAWN_LOCATION)
-            else if (plugin.teamHelper.getPlayerTeam(it) == Team.RED)
+            else if (plugin.teamHelper.getPlayerTeam(it) == Team.RED) {
+                it.bedSpawnLocation = TEAM_SPAWN_RED_LOCATION
                 it.teleport(TEAM_SPAWN_RED_LOCATION)
-            else it.teleport(TEAM_SPAWN_BLUE_LOCATION)
+            } else {
+                it.bedSpawnLocation = TEAM_SPAWN_BLUE_LOCATION
+                it.teleport(TEAM_SPAWN_BLUE_LOCATION)
+            }
         }
     }
 
@@ -142,10 +162,11 @@ object ImportantFunctions {
     fun setIngamePlayerItems(p: Player) {
         p.inventory.setItem(0, swordItem)
         p.inventory.setItem(1, bowItem)
-        p.inventory.setItem(2, goldenAppleItem)
-        p.inventory.setItem(3, iron_pickage)
-        p.inventory.setItem(4, iron_axe)
+        p.inventory.setItem(2, goldenAppleItems)
+        p.inventory.setItem(3, ironPickage)
+        p.inventory.setItem(4, ironAxe)
         p.inventory.setItem(5, woodItems)
+        p.inventory.setItem(6, steakItems)
         p.inventory.setItem(8, arrowItems)
     }
 
@@ -187,7 +208,7 @@ object ImportantFunctions {
         }
     }
 
-    fun setIngameItemsAll() {
+    fun setIngameItemsForPlayers() {
         PLAYERS.forEach {
             setIngamePlayerItems(it.key)
         }
