@@ -129,13 +129,13 @@ object ImportantFunctions {
 
     fun enchantStartItem() {
         Bukkit.getOnlinePlayers().forEach {
-            if (it.hasPermission(PERMISSION_BYPASS)) it.inventory.getItem(0)?.addUnsafeEnchantment(Enchantment.LUCK, 1)
+            if (it.hasPermission(PERMISSION_BYPASS)) it.inventory.getItem(0)?.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 1)
         }
     }
 
     fun disEnchantStartItem() {
         Bukkit.getOnlinePlayers().forEach {
-            if (it.hasPermission(PERMISSION_BYPASS)) it.inventory.getItem(0)?.removeEnchantment(Enchantment.LUCK)
+            if (it.hasPermission(PERMISSION_BYPASS)) it.inventory.getItem(0)?.removeEnchantment(Enchantment.LUCK_OF_THE_SEA)
         }
     }
     //TODO setMOTD!
@@ -211,7 +211,7 @@ object ImportantFunctions {
             Team.BLUE -> plugin.teamHelper.teamBluePlayers
         }
         val effect = PotionEffect(
-            PotionEffectType.SLOW_DIGGING,
+            PotionEffectType.MINING_FATIGUE,
             20,
             1,
             false,

@@ -1,8 +1,5 @@
 package cores.listener
 
-import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.ProtocolLibrary
-import com.comphenix.protocol.events.PacketContainer
 import cores.Main
 import cores.api.GlobalConst
 import cores.api.GlobalVars.PLAYERS
