@@ -36,7 +36,7 @@ class Main : JavaPlugin() {
     val scoreboard = Scoreboard()
     val actionBarIdle = ActionBarIdle() //TODO Don't like that!
     val rankHelper = RankHelper()
-    val stats = Stats()
+    val statsManager = StatsManager()
 
 
     override fun onEnable() {

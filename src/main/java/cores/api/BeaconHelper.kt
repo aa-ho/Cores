@@ -9,7 +9,6 @@ import cores.api.GlobalConst.RED_CORE_BACK
 import cores.api.GlobalConst.RED_CORE_FRONT
 import cores.api.GlobalConst.RED_CORE_LEFT
 import cores.api.GlobalConst.RED_CORE_RIGHT
-import cores.api.ImportantFunctions.onCoreDestroyed
 import cores.api.ImportantFunctions.updateInGameScoreboardAll
 import cores.gameStates.GameStates
 import org.bukkit.Location
@@ -51,6 +50,6 @@ class BeaconHelper {
             }
         }
         updateInGameScoreboardAll()
-        if (plugin.gameStateManager.getCurrentGameState() == GameStates.INGAME_STATE) plugin.gameStateManager.ingameState.isGameOver()
+        if (plugin.gameStateManager.getCurrentGameState() == GameStates.INGAME_STATE) plugin.gameStateManager.ingameState.gameOver()
     }
 }

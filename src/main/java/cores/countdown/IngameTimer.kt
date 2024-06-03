@@ -14,6 +14,9 @@ class IngameTimer : Countdown() {
 
     var seconds = 0
 
+    private val quarterPercent = 0.25
+    private val timePoints = listOf(0.8, 0.9, 0.95, 0.975, 0.99, 0.995)
+
     override fun start() {
         if (!isIdling) {
             isIdling = true
@@ -21,17 +24,23 @@ class IngameTimer : Countdown() {
                 updateInGameScoreboardAll()
                 when(seconds) {
                     INGAME_TOTAL_SECONDS/2 -> {
-                        halftimeBroadcast()
-                        playTimeReminderSoundToAll()
+                        if(INGAME_TOTAL_SECONDS>120) {
+                            halftimeBroadcast()
+                            playTimeReminderSoundToAll()
+                        }
                     }
-                    INGAME_TOTAL_SECONDS/4 -> {
-                        gameEndsInXMinutes(INGAME_TOTAL_SECONDS/60/4)
-                        playTimeReminderSoundToAll()
+/*                    (INGAME_TOTAL_SECONDS * quarterPercent).toInt() -> {
+                        if (INGAME_TOTAL_SECONDS > 240) {
+                            val minutesLeft = (INGAME_TOTAL_SECONDS * quarterPercent) / 60
+                            gameEndsInXMinutes(minutesLeft.toInt())
+                            playTimeReminderSoundToAll()
+                        }
                     }
-                    INGAME_TOTAL_SECONDS-1200, INGAME_TOTAL_SECONDS-600, INGAME_TOTAL_SECONDS-300, INGAME_TOTAL_SECONDS-240, INGAME_TOTAL_SECONDS-180, INGAME_TOTAL_SECONDS-120 -> {
-                        gameEndsInXMinutes(seconds/60)
+                    in timePoints.map { (it * INGAME_TOTAL_SECONDS).toInt() } -> {
+                        val minutesLeft = seconds / 60
+                        gameEndsInXMinutes(minutesLeft)
                         playTimeReminderSoundToAll()
-                    }
+                    }*/
                     INGAME_TOTAL_SECONDS-60, INGAME_TOTAL_SECONDS-30, INGAME_TOTAL_SECONDS-20, INGAME_TOTAL_SECONDS-10, INGAME_TOTAL_SECONDS-5, INGAME_TOTAL_SECONDS-4, INGAME_TOTAL_SECONDS-3, INGAME_TOTAL_SECONDS-2, INGAME_TOTAL_SECONDS-1 -> {
                         gameEndsInXSeconds(seconds)
                     }

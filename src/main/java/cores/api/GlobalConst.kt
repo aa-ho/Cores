@@ -13,7 +13,7 @@ object GlobalConst {
     var MIN_PLAYERS = 2
     var MAX_PLAYERS = 10
     var LOBBY_COUNTDOWN_SECONDS = 60 //TODO Eigentlich 60
-    var INGAME_TOTAL_SECONDS = 300 //TODO Eigentlich 60*240
+    var INGAME_TOTAL_SECONDS = 120 //TODO Eigentlich 60*240
     var END_COUNTDOWN_SECONDS = 20
     var DATE_TEXT_FORMAT = "dd.MM.yyyy HH:mm"
     var LOBBY_COUNTDOWN_SKIP_SECONDS = 10
@@ -38,7 +38,7 @@ object GlobalConst {
     var BLUE_CORE_RIGHT = defaultLocation
 
     val swordItem = ItemBuilder(Material.STONE_SWORD).build()
-    val ironPickage = ItemBuilder(Material.IRON_PICKAXE).build()
+    val ironPickaxe = ItemBuilder(Material.IRON_PICKAXE).build()
     val ironAxe = ItemBuilder(Material.IRON_AXE).build()
     val bowItem = ItemBuilder(Material.BOW).build()
     val goldenAppleItems = ItemBuilder(Material.GOLDEN_APPLE).build()

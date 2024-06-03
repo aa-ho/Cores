@@ -90,7 +90,7 @@ object Messages {
         }
     }
 
-    private fun broadcastMessage(msg: String, prefix: Boolean = true) {
+    fun broadcastMessage(msg: String, prefix: Boolean = true) {
         Bukkit.broadcastMessage("${if (prefix) PREFIX_CHAT else ""}$msg")
     }
 
@@ -133,7 +133,7 @@ object Messages {
         when(plugin.gameStateManager.getCurrentGameState()) {
             GameStates.LOBBY_STATE -> broadcastMessage("${plugin.rankHelper.getPlayersRankColor(p)}${p.name}§7 hat das Spiel verlassen (§b${PLAYERS.size}§7/§3$MAX_PLAYERS§7).")
             GameStates.INGAME_STATE -> {
-                if(PLAYERS.containsKey(p)) broadcastMessage("${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}§7 hat das Spiel verlassen (rejoin).")
+                if(PLAYERS.containsKey(p)) broadcastMessage("${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7 hat das Spiel verlassen (rejoin).")
             }
             GameStates.END_STATE -> broadcastMessage("${plugin.rankHelper.getPlayersRankColor(p)}${p.name}§7 hat das Spiel verlassen.")
         }
@@ -271,8 +271,7 @@ object Messages {
             else sendPlayer(it, "$playerColored§7 ist gestorben.")
         }
     }
-    fun setTeamHasWon(team: Team) {
-        WINNING_TEAM = team
-        broadcastMessage("Team ${WINNING_TEAM.colorDisplayed}${WINNING_TEAM.name}§7 hat das Spiel gewonnen.")
+    fun setTeamHasWonMessage() {
+        broadcastMessage("Team ${WINNING_TEAM.colorDisplayed}${WINNING_TEAM.teamName}§7 hat das Spiel gewonnen.")
     }
 }

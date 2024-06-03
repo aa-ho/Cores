@@ -12,7 +12,7 @@ import cores.api.GlobalConst.arrowItems
 import cores.api.GlobalConst.bowItem
 import cores.api.GlobalConst.goldenAppleItems
 import cores.api.GlobalConst.ironAxe
-import cores.api.GlobalConst.ironPickage
+import cores.api.GlobalConst.ironPickaxe
 import cores.api.GlobalConst.steakItems
 import cores.api.GlobalConst.swordItem
 import cores.api.GlobalConst.woodItems
@@ -68,13 +68,9 @@ object ImportantFunctions {
     fun onCoreDestroyed(team: Team, beacon: Beacon, p: Player) {
         playSoundForAll(Sound.ENTITY_WITHER_DEATH)
         sendCoreDestroyed(p, beacon)
-        sendTitleForAll(
-            "${team.colorDisplayed}$beacon-Beacon",
-            5,
-            80,
-            5,
-            "§7wurde von ${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7zerstört"
-        )
+        Bukkit.getOnlinePlayers().forEach {
+            it.sendTitle("${team.colorDisplayed}$beacon-Beacon", "§7wurde von §7${if(it.name == p.name) "dir" else "${plugin.teamHelper.getPlayerTeam(p).colorDisplayed}${p.name}§7"} zerstört", 5, 60, 5)
+        }
     }
 
     fun resetAllPlayers() {
@@ -102,10 +98,8 @@ object ImportantFunctions {
             if (!PLAYERS.containsKey(it))
                 it.teleport(SPECTATOR_SPAWN_LOCATION)
             else if (plugin.teamHelper.getPlayerTeam(it) == Team.RED) {
-                it.bedSpawnLocation = TEAM_SPAWN_RED_LOCATION
                 it.teleport(TEAM_SPAWN_RED_LOCATION)
             } else {
-                it.bedSpawnLocation = TEAM_SPAWN_BLUE_LOCATION
                 it.teleport(TEAM_SPAWN_BLUE_LOCATION)
             }
         }
@@ -225,7 +219,7 @@ object ImportantFunctions {
         p.inventory.setItem(0, swordItem)
         p.inventory.setItem(1, bowItem)
         p.inventory.setItem(2, goldenAppleItems)
-        p.inventory.setItem(3, ironPickage)
+        p.inventory.setItem(3, ironPickaxe)
         p.inventory.setItem(4, ironAxe)
         p.inventory.setItem(5, woodItems)
         p.inventory.setItem(6, steakItems)

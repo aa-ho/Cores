@@ -53,6 +53,7 @@ class Scoreboard {
         p.scoreboard = lobbyScoreboard
         setTabList(p)
     }
+
     private fun setTabList(p: Player) {
         val header = "§f§lNOOB-GAMES.NET"
         val footer = "§7Du bist auf §e$PREFIX_COLORED-1"
@@ -66,25 +67,28 @@ class Scoreboard {
         objective.displayName = "§f§lNOOB-GAMES.NET"
         objective.displaySlot = DisplaySlot.SIDEBAR
         objective.getScore(" ").score = 15
-        objective.getScore("§fTimer:").score = 14
-        objective.getScore("§3${convertSeconds(plugin.gameStateManager.ingameState.ingameTimer.seconds)}").score =
-            13
-        objective.getScore("").score = 12
-        objective.getScore("${RED_COLORED}§8:").score = 11
-        var count = 10
+        objective.getScore("§fTimer: §3${convertSeconds(plugin.gameStateManager.ingameState.ingameTimer.seconds)}").score = 14
+        objective.getScore("").score = 13
+        if(plugin.statsManager.getKD(p.name) != "0") {
+            objective.getScore("§fK/D: §3${plugin.statsManager.getKD(p.name)}").score = 12
+            objective.getScore("").score = 11
+        }
+        objective.getScore("${RED_COLORED}§8:").score = 10
+        var count = 9
         for (redCores in plugin.beaconHelper.redCores) {
             objective.getScore("${redCores.key}-Core").score = count
             count--
         }
-        objective.getScore("  ").score = 6
-        objective.getScore("${BLUE_COLORED}§8:").score = 5
-        count = 4
+        objective.getScore("  ").score = 5
+        objective.getScore("${BLUE_COLORED}§8:").score = 4
+        count = 3
         for (blueCores in plugin.beaconHelper.blueCores) {
             objective.getScore("${blueCores.key}-Core ").score = count
             count--
         }
         p.scoreboard = scoreboard
     }
+
     fun updateEndGameScoreboard(p: Player) {
         val scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
         val objective: Objective = scoreboard.registerNewObjective("scoreboard3", "dummy3")
@@ -92,11 +96,13 @@ class Scoreboard {
         objective.displaySlot = DisplaySlot.SIDEBAR
         objective.getScore(" ").score = 15
         objective.getScore("§fDauer:").score = 14
-        objective.getScore("§7${convertSeconds(plugin.gameStateManager.ingameState.ingameTimer.seconds)}").score =
-            13
+        objective.getScore("§3${convertSeconds(plugin.gameStateManager.ingameState.ingameTimer.seconds)}").score = 13
         objective.getScore("").score = 12
-        objective.getScore("§fGewonnen:")
-        objective.getScore("${WINNING_TEAM.colorDisplayed}${WINNING_TEAM.name}")
+        objective.getScore("§fGewonnen:").score = 11
+        objective.getScore("${WINNING_TEAM.colorDisplayed}${WINNING_TEAM.teamName}").score = 10
+        objective.getScore("").score = 9
+        objective.getScore("§fK/D:").score = 8
+        objective.getScore("§3${plugin.statsManager.getKD(p.name)}").score = 7
         p.scoreboard = scoreboard
     }
 }

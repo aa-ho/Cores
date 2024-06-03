@@ -32,11 +32,11 @@ class LobbyCountdown: Countdown() {
                         gameStartInXSecond(seconds)
                     }
                     8 -> {
-                        ImportantFunctions.sendTitleForAll(Messages.gameTitle(), 15, 20, 15)
+                        ImportantFunctions.sendTitleForAll(Messages.gameTitle(), 15, 20, 15, "§eMünchen")
                     }
                     5, 4, 3, 2, 1 -> {
                         ImportantFunctions.playSoundForAll(LOBBY_COUNTDOWN_SOUND)
-                        ImportantFunctions.sendTitleForAll(Messages.gameStartInXSecondTitle(seconds), 0, 20, 0, "")
+                        ImportantFunctions.sendTitleForAll("", 0, 20, 0, Messages.gameStartInXSecondTitle(seconds))
 
                     }
                     0 -> {

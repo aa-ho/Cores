@@ -1,13 +1,14 @@
 package cores.gameStates
 
 import cores.Main.Companion.plugin
+import cores.api.GlobalConst
 import cores.api.GlobalVars.PLAYERS
 import cores.api.ImportantFunctions.resetAllPlayers
 import cores.api.ImportantFunctions.setIngameItemsForPlayers
 import cores.api.ImportantFunctions.setPlayersSurvival
 import cores.api.ImportantFunctions.teleportAllTeams
 import cores.api.Messages
-import cores.api.Messages.setTeamHasWon
+import cores.api.Messages.setTeamHasWonMessage
 import cores.api.Team
 import cores.countdown.InGameIdle
 import cores.countdown.IngameTimer
@@ -23,7 +24,7 @@ class IngameState : GameState() {
         if (!isRunning) {
             isRunning = true
             plugin.teamHelper.assignPlayers()
-            plugin.stats.addPlayersToStats()
+            plugin.statsManager.initializePlayerStats()
             setPlayersSurvival()
             teleportAllTeams()
             resetAllPlayers()
@@ -43,7 +44,13 @@ class IngameState : GameState() {
         }
     }
 
-    fun isGameOver() {
+    private fun setTeamHasWon(team: Team) {
+        GlobalConst.WINNING_TEAM = team
+        plugin.statsManager.addWins(GlobalConst.WINNING_TEAM)
+        setTeamHasWonMessage()
+    }
+
+    fun gameOver() {
         if (!plugin.beaconHelper.hasTeamCores(Team.RED)) {
             setTeamHasWon(Team.BLUE)
             plugin.gameStateManager.setGameState(GameStates.END_STATE)
