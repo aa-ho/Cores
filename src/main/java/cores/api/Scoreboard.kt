@@ -9,10 +9,9 @@ import cores.api.Messages.RED_COLORED
 import cores.api.Messages.getPlayersScoreboard
 import cores.api.Messages.scoreboardLobbyCountdown
 import org.bukkit.Bukkit
-import org.bukkit.Bukkit.broadcast
-import org.bukkit.Bukkit.broadcastMessage
 import org.bukkit.entity.Player
-import org.bukkit.scoreboard.*
+import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Scoreboard
 
 
@@ -103,6 +102,7 @@ class Scoreboard {
         objective.getScore("").score = 9
         objective.getScore("§fK/D:").score = 8
         objective.getScore("§3${plugin.statsManager.getKD(p.name)}").score = 7
+        objective.getScore("").score = 6
         p.scoreboard = scoreboard
     }
 }
