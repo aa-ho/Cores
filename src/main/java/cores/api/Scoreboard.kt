@@ -96,13 +96,13 @@ class Scoreboard {
         objective.getScore(" ").score = 15
         objective.getScore("§fDauer:").score = 14
         objective.getScore("§3${convertSeconds(plugin.gameStateManager.ingameState.ingameTimer.seconds)}").score = 13
-        objective.getScore("").score = 12
+        objective.getScore("§b§l").score = 12
         objective.getScore("§fGewonnen:").score = 11
         objective.getScore("${WINNING_TEAM.colorDisplayed}${WINNING_TEAM.teamName}").score = 10
-        objective.getScore("").score = 9
+        objective.getScore("§c ").score = 9
         objective.getScore("§fK/D:").score = 8
         objective.getScore("§3${plugin.statsManager.getKD(p.name)}").score = 7
-        objective.getScore("").score = 6
+        objective.getScore(" §4").score = 6
         p.scoreboard = scoreboard
     }
 }
