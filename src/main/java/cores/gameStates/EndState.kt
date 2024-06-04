@@ -1,9 +1,7 @@
 package cores.gameStates
 
+import cores.Main.Companion.plugin
 import cores.api.GlobalConst.LOBBY_SPAWN_LOCATION
-import cores.api.ImportantFunctions
-import cores.api.ImportantFunctions.clearAll
-import cores.api.ImportantFunctions.closeAllInventories
 import cores.api.ImportantFunctions.resetAllPlayers
 import cores.api.ImportantFunctions.setGameModeAll
 import cores.api.ImportantFunctions.teleportAll
@@ -23,6 +21,7 @@ class EndState: GameState() {
             teleportAll(LOBBY_SPAWN_LOCATION)
             resetAllPlayers()
             endStateCountdown.start()
+            plugin.mapHelper.reset()
         }
     }
 

@@ -37,11 +37,11 @@ class Main : JavaPlugin() {
     val actionBarIdle = ActionBarIdle() //TODO Don't like that!
     val rankHelper = RankHelper()
     val statsManager = StatsManager()
+    val mapHelper = MapSaveAndUnloader()
 
 
     override fun onEnable() {
         sendPluginDisEnabled(true, LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TEXT_FORMAT)))
-        //protocolManager = ProtocolLibrary.getProtocolManager()
         configuration = Configuration()
         configuration.checkConfig()
         registerEvents()
@@ -49,11 +49,13 @@ class Main : JavaPlugin() {
         teamHelper.buildTeamInventory()
         actionBarIdle.start()
         gameStateManager.startGameState(GameStates.LOBBY_STATE)
+        mapHelper.save()
     }
 
     override fun onDisable() {
         sendPluginDisEnabled(false, LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TEXT_FORMAT)))
         kickAll(KICK_RESTART)
+        mapHelper.reset()
     }
 
     private fun registerEvents() {

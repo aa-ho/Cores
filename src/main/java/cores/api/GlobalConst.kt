@@ -19,7 +19,7 @@ object GlobalConst {
     var LOBBY_COUNTDOWN_SKIP_SECONDS = 10
     lateinit var WINNING_TEAM: Team
 
-    val defaultLocation = Location(Bukkit.getWorld("world"), 0.0, 300.0, 0.0)
+    val defaultLocation = Location(Bukkit.getWorld("world"), 1000.0, 1000.0, 1000.0)
 
     var LOBBY_SPAWN_LOCATION = defaultLocation
     var TEAM_SPAWN_RED_LOCATION = defaultLocation
